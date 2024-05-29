@@ -1,0 +1,144 @@
+import React, { PropsWithChildren } from "react";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
+
+import { useAppDispatch } from "../../redux/hooks";
+import { deleteTemplate } from "../../redux/entities/formBuilderEntity";
+
+import { TemplateType } from "../../types/FormTemplateTypes";
+
+import Trash from "../../assets/svg/Trash";
+import Edit from "../../assets/svg/Edit";
+
+interface FormLayoutComponentProps {
+  template: TemplateType | null;
+  createdFormLayout: boolean;
+  setOpenDialog?: (arg: boolean) => void;
+}
+
+const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
+  createdFormLayout,
+  template,
+  setOpenDialog,
+}) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  return (
+    <>
+      {createdFormLayout ? (
+        <div className="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-warning px-2 fw-medium"
+            onClick={() =>
+              navigate(`/formbuilder/${(template as TemplateType).id}`)
+            }
+          >
+            <Edit width="16" height="16" />
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-danger px-2 fw-medium"
+            onClick={() => {
+              if (confirm("Are you sure you want to delete the template?"))
+                dispatch(deleteTemplate(template?.id as string));
+            }}
+          >
+            <Trash width="16" height="16" />
+          </button>
+        </div>
+      ) : (
+        <div>
+          <button
+            type="button"
+            onClick={() => {
+              return setOpenDialog ? setOpenDialog(true) : null;
+            }}
+            className="btn btn-sm btn-primary px-4 fw-medium shadow-sm mb-3"
+          >
+            Let's Create
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+const FormLayoutComponent: React.FC<
+  PropsWithChildren<FormLayoutComponentProps>
+> = ({ template, createdFormLayout, setOpenDialog }) => {
+  const title = createdFormLayout
+    ? (template as TemplateType).formName
+    : "Create a New Form";
+  const creator = createdFormLayout ? (template as TemplateType).creator : "";
+  const lastOpened = createdFormLayout
+    ? (template as TemplateType).updatedAt
+    : "";
+
+  const description = createdFormLayout
+    ? ""
+    : "Begin from scratch. Click the button below to start designing a form tailored to your specific needs.";
+
+  const cardStyle = { width: template ? "250px" : "100%" };
+  const className = `card  ${
+    template ? "bg-white" : "bg-transparent text-center border-0  "
+  }`;
+
+  return (
+    <>
+      <div className={className} style={{ ...cardStyle }}>
+        <div className="card-body d-flex flex-column justify-content-between p-4">
+          <div className="d-flex gap-2 justify-content-between align-items-center flex-wrap">
+            <div className={template ? "" : `w-100`}>
+              <h5 className="card-title text-dark-emphasis">{title}</h5>
+            </div>
+          </div>
+
+          <p className="card-text text-dark-emphasis">{description}</p>
+
+          {!template ? (
+            <ActionSection
+              template={template}
+              setOpenDialog={setOpenDialog}
+              createdFormLayout={createdFormLayout}
+            />
+          ) : (
+            <></>
+          )}
+
+          {lastOpened ? (
+            <p className="card-text fw-light ">
+              <span className="tex-muted">You Opened . </span>
+              <span className="text-dark">
+                {moment(new Date(lastOpened)).format("MMM DD, YYYY")}
+              </span>
+            </p>
+          ) : (
+            <></>
+          )}
+          {creator ? (
+            <div>
+              <div className="my-2 fs-7 px-4 fw-light px-4 badge rounded-pill border border-primary-subtle bg-primary-subtle text-primary-emphasis">
+                {creator}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {template ? (
+            <ActionSection
+              template={template}
+              setOpenDialog={setOpenDialog}
+              createdFormLayout={createdFormLayout}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default FormLayoutComponent;
