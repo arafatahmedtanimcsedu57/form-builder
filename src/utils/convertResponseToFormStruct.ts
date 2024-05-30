@@ -12,6 +12,8 @@ type Field = {
   required: boolean;
   options?: Option[];
   placeholder?: string;
+  sequence: number;
+  information: string;
 };
 
 type Block = {
@@ -67,13 +69,16 @@ function convertForm(input: Form) {
         id: field.id,
         controlName: convertControlName(field.type),
         displayText: field.label,
-        description: field.placeholder || "",
+        description: field.information || "",
+        placeholder: field.placeholder || "",
         labelName: field.label,
         itemType: "control",
         icon: getIconForControl(field.type),
         required: field.required,
         category: getCategoryForControl(field.type),
         containerId: field.id,
+        name: field.name,
+        sequence: field.sequence,
         ...(field.options
           ? {
               items: field.options.map((option) => ({

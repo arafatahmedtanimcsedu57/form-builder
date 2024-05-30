@@ -1,6 +1,5 @@
 import { useState } from "react";
 import moment from "moment";
-import ReactJson from "react-json-view";
 
 import { useAppDispatch } from "../../../redux/hooks";
 import { saveTemplate } from "../../../redux/entities/formBuilderEntity";
@@ -266,7 +265,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
     let updatedAt = moment().unix() * 1000;
 
-    if (currentTemplate.lastPublishedAt !== 0) {
+    if (currentTemplate.lastPublishedAt !== "") {
       currentTemplate.publishHistory.splice(0, 0, {
         lastPublishedAt: currentTemplate.lastPublishedAt,
         formLayoutComponents: currentTemplate.formLayoutComponents,

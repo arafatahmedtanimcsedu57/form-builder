@@ -1,10 +1,12 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import {
   closeCircularProgress,
   openCircularProgress,
 } from "../uireducers/progress";
+
+import apis from "../../service/Apis";
+import { Post } from "../../service/axios.call";
 
 interface LoginRequest {
   username: string;
@@ -17,8 +19,6 @@ interface Login {
   success: boolean;
 }
 
-const backendURL = "https://stg-digireg-b.allevia.md";
-
 export const getLogin = createAsyncThunk(
   "auth/getLogedIn",
 
@@ -29,17 +29,10 @@ export const getLogin = createAsyncThunk(
     dispatch(openCircularProgress());
 
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const { data } = await axios.post(
-        `${backendURL}/api/authentication/authenticate`,
-        { username, password },
-        config,
-      );
+      const { data } = await Post({
+        url: `${apis.BASE}/api/authentication/authenticate`,
+        data: { username, password },
+      });
 
       dispatch(closeCircularProgress());
       return data;

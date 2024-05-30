@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import moment from "moment";
-import { TemplateType } from "../../types/FormTemplateTypes";
 import _ from "lodash";
 
 import { getFromLocalStorage, saveToLocalStorage } from "../common";
@@ -9,8 +8,12 @@ import {
   openCircularProgress,
 } from "../uireducers/progress";
 
+import { TemplateType } from "../../types/FormTemplateTypes";
 import { generateID } from "../../utils/common";
-import DemoFormLayouts from "../../utils/demoFormLayouts";
+import convertForm from "../../utils/convertResponseToFormStruct";
+
+import apis from "../../service/Apis";
+import { SecureGet } from "../../service/axios.call";
 
 interface AddTemplateType {
   formName: string;
@@ -18,22 +21,26 @@ interface AddTemplateType {
 
 export const getAllTemplates = createAsyncThunk(
   "formBuilderEntity/getAllTemplates",
-  async (data, { dispatch }) => {
+
+  async (data: string, { rejectWithValue, dispatch }) => {
     dispatch(openCircularProgress());
 
-    return await new Promise<TemplateType[]>((resolve, reject) => {
-      let outputInStorage = JSON.parse(getFromLocalStorage("templates"));
+    try {
+      const { data }: { data: unknown[] } = await SecureGet({
+        url: `${apis.BASE}/api/formStructure/`,
+      });
 
-      if (outputInStorage === null) {
-        outputInStorage = DemoFormLayouts;
-        saveToLocalStorage("templates", JSON.stringify(outputInStorage));
-      }
+      dispatch(closeCircularProgress());
+      const _data: TemplateType[] = data.map((item: any) => convertForm(item));
+      saveToLocalStorage("templates", JSON.stringify(_data));
+      return _data;
+    } catch (error: any) {
+      dispatch(closeCircularProgress());
 
-      setTimeout(() => {
-        dispatch(closeCircularProgress());
-        resolve(outputInStorage);
-      }, 1000);
-    });
+      if (error.response && error.response.data.message)
+        return rejectWithValue(error.response.data.message);
+      else return rejectWithValue(error.message);
+    }
   },
 );
 
@@ -71,13 +78,13 @@ export const addTemplate = createAsyncThunk(
       const template: TemplateType = {
         id: generateID(),
         formName: formName,
-        createdAt: currentDateTime,
+        createdAt: "",
         creator: "Test User",
         formLayoutComponents: [],
-        lastPublishedAt: 0,
+        lastPublishedAt: "",
         publishHistory: [],
         publishStatus: "draft",
-        updatedAt: 0,
+        updatedAt: "",
       };
 
       allTemplates.push(template);

@@ -1,9 +1,9 @@
 export interface TemplateType {
   formName: string;
   id: string;
-  createdAt: number;
-  updatedAt: number;
-  lastPublishedAt: number;
+  createdAt: string;
+  updatedAt: string;
+  lastPublishedAt: string;
   publishStatus: string;
   formLayoutComponents: FormLayoutComponentsType[];
   publishHistory: FormLayoutHistoryType[];
@@ -16,7 +16,7 @@ export interface FormLayoutComponentsType {
 }
 
 export interface FormLayoutHistoryType {
-  lastPublishedAt: number;
+  lastPublishedAt: string;
   formLayoutComponents: FormLayoutComponentsType[];
 }
 

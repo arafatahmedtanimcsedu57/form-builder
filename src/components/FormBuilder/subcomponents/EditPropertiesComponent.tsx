@@ -181,8 +181,11 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       onChange={handleChange}
                       size="small"
                       className="form-control"
+                      key="container_heading"
+                      id="container_heading"
                     />
                   </div>
+
                   <div className="mb-3">
                     <TextField
                       size="small"
@@ -191,10 +194,15 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       value={containerUpdatedItem.subHeading}
                       onChange={handleChange}
                       className="form-control"
+                      key="container-sub-heading"
+                      id="container-sub-heading"
                     />
                   </div>
+
                   <div className="mb-3">
                     <FormControlLabel
+                      key="skipable-confirmation"
+                      id="skipable-confirmation"
                       control={
                         <Checkbox
                           value={containerUpdatedItem.skipAble}
@@ -214,8 +222,9 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       label="Cointainer is skip able?"
                     />
                   </div>
+
                   <div className="mb-3">
-                    <FormControl fullWidth>
+                    <FormControl fullWidth id="field-type" key="field-type">
                       <InputLabel size="small" id="demo-simple-select-label">
                         Select Type
                       </InputLabel>
@@ -225,30 +234,33 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                         value={containerUpdatedItem.type}
                         label="Select Type"
                         name="type"
-                        onChange={(e: any) => {
-                          handleChange(e);
-                        }}
+                        onChange={(e: any) => handleChange(e)}
                         size="small"
                       >
-                        <MenuItem value={"INPUT"}>INPUT</MenuItem>
-                        <MenuItem value={"SIGNATURE"}>SIGNATURE</MenuItem>
+                        <MenuItem key="input" value={"INPUT"}>
+                          INPUT
+                        </MenuItem>
+                        <MenuItem key="signature" value={"SIGNATURE"}>
+                          SIGNATURE
+                        </MenuItem>
                       </Select>
                     </FormControl>
                   </div>
+
                   <div className="d-flex flex-wrap gap-2">
                     <button
+                      key="update-block"
                       type="submit"
                       className="btn btn-sm btn-warning px-4 fw-medium"
                     >
                       Update Data
                     </button>
                     <button
+                      key="cancle-block"
                       type="button"
                       className="btn btn-sm btn-light px-4 fw-medium"
                       onClick={() => {
-                        if (selectControl) {
-                          selectControl(undefined);
-                        }
+                        if (selectControl) selectControl(undefined);
                       }}
                     >
                       Cancel
@@ -263,6 +275,8 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                 <form onSubmit={onFormSubmit} style={{ minWidth: "100%" }}>
                   <div className="mb-3">
                     <TextField
+                      id="field-label"
+                      key="field-label"
                       size="small"
                       label="Field Label"
                       name="labelName"
@@ -271,8 +285,11 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       className="form-control"
                     />
                   </div>
+
                   <div className="mb-3">
                     <TextField
+                      id="field-name"
+                      key="field-name"
                       size="small"
                       label="Field Name"
                       name="name"
@@ -281,8 +298,11 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       className="form-control"
                     />
                   </div>
+
                   <div className="mb-3">
                     <TextField
+                      id="field-Sequence"
+                      key="field-Sequence"
                       label="Field Sequence"
                       name="sequence"
                       value={childUpdatedItem.sequence}
@@ -291,6 +311,7 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       size="small"
                     />
                   </div>
+
                   {childUpdatedItem.controlName ===
                     FormControlNames.INPUTTEXTFIELD ||
                   childUpdatedItem.controlName ===
@@ -305,6 +326,8 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                     <>
                       <div className="mb-3">
                         <TextField
+                          id="field-placeholder"
+                          key="field-placeholder"
                           size="small"
                           label="Field Placeholder"
                           name="placeholder"
@@ -315,20 +338,25 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       </div>
                     </>
                   ) : (
-                    ""
+                    <></>
                   )}
                   <div className="mb-3">
                     <TextField
+                      id="field-information"
+                      key="field-information"
                       size="small"
-                      label="Field Description"
+                      label="Field Information"
                       name="description"
                       value={childUpdatedItem.description}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </div>
+
                   <div className="mb-3">
                     <FormControlLabel
+                      id="field-required"
+                      key="field-required"
                       control={
                         <Checkbox
                           checked={isUpdatedItemRequired}
@@ -340,6 +368,7 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                       label="Required"
                     />
                   </div>
+
                   {childUpdatedItem.controlName ===
                     FormControlNames.RADIOGROUP ||
                   childUpdatedItem.controlName ===
@@ -347,7 +376,7 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                   childUpdatedItem.controlName ===
                     FormControlNames.CHECKLIST ? (
                     <>
-                      <h6>List Items</h6>
+                      <h6>Options</h6>
                       <ManageItemsListComponent
                         addItemInList={addItemInList}
                         editIteminList={editIteminList}
@@ -355,22 +384,26 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                         items={childUpdatedItem.items}
                       />
                     </>
-                  ) : null}
+                  ) : (
+                    <></>
+                  )}
 
                   <div className="d-flex flex-wrap gap-2">
                     <button
                       type="submit"
                       className="btn btn-sm btn-warning px-4 fw-medium"
+                      id="field-update"
+                      key="field-update"
                     >
                       Update Data
                     </button>
                     <button
                       type="button"
+                      id="field-cancel"
+                      key="field-cancel"
                       className="btn btn-sm btn-light px-4 fw-medium"
                       onClick={() => {
-                        if (selectControl) {
-                          selectControl(undefined);
-                        }
+                        if (selectControl) selectControl(undefined);
                       }}
                     >
                       Cancel
@@ -385,7 +418,7 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
         <>
           <div className="alert alert-warning">
             <h4>Note!</h4>
-            You need to select a container/control to edit properties.
+            You need to select a container or control to edit properties.
           </div>
         </>
       )}
