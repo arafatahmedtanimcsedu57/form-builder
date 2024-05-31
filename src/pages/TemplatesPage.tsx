@@ -27,8 +27,7 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   useEffect(() => {
-    if (templates.length === 0 && authToken)
-      dispatch(getAllTemplates("GET ALL TEMPLATE"));
+    if (authToken) dispatch(getAllTemplates("GET ALL TEMPLATE"));
   }, [authToken]);
 
   return (

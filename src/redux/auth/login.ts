@@ -12,6 +12,10 @@ interface LoginRequest {
   username: string;
   password: string;
 }
+
+interface LoginResponse {
+  token: string;
+}
 interface Login {
   loading: boolean;
   userToken: string | null;
@@ -19,7 +23,7 @@ interface Login {
   success: boolean;
 }
 
-export const getLogin = createAsyncThunk(
+export const getLogin = createAsyncThunk<LoginResponse, LoginRequest>(
   "auth/getLogedIn",
 
   async (
@@ -29,7 +33,7 @@ export const getLogin = createAsyncThunk(
     dispatch(openCircularProgress());
 
     try {
-      const { data } = await Post({
+      const { data } = await Post<LoginResponse>({
         url: `${apis.BASE}/api/authentication/authenticate`,
         data: { username, password },
       });

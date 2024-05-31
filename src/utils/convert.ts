@@ -1,3 +1,4 @@
+import { Option } from "../types/ResponseFormTypes";
 import { FormControlNames } from "./formBuilderUtils";
 
 interface ConvertPropsType {
@@ -19,7 +20,11 @@ const convertChild = (child: any) => {
   if (child.placeholder) newChild.placeholder = child.placeholder;
   if (child.labelName) newChild.label = child.labelName;
   if (child.name) newChild.name = child.name;
-  if (child.items) newChild.options = child.items;
+  if (child.items)
+    newChild.options = child.items.map((item: Option) => ({
+      value: item.value,
+      label: item.label,
+    }));
   newChild.sequence = Number(child.sequence || "0");
   newChild.information = child.description || "";
   newChild.required = child.required || false;
@@ -33,8 +38,10 @@ export const convert = (data: ConvertPropsType[]) => {
   newData.blocks = [];
 
   if (data.length) {
+    let index = 0;
     for (const item of data as ConvertPropsType[]) {
       const newItem: any = {};
+      newItem.sequence = ++index;
       newItem.title = item.container.heading;
       newItem.fields = [];
       newItem.type = item.container.type;

@@ -105,13 +105,10 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
       >
         {accept === FormItemTypes.CONTAINER ? (
           <>
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{ minHeight: "90px" }}
-            >
+            <div className="d-flex justify-content-center align-items-center py-4 px-5">
               <button
                 type="button"
-                className="btn btn-sm btn-outline-dark fw-medium px-5"
+                className="btn btn-sm btn-outline-dark fw-medium px-5 text-nowrap"
                 onClick={() => {
                   if (handleItemAdded) {
                     handleItemAdded({ ...FormContainerList[0] });
@@ -137,7 +134,7 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
                   {(layout as FormLayoutComponentContainerType)?.subHeading}
                 </p>
               </div>
-              <div className="d-flex flex-wrap gap-2 align-items-center">
+              <div className="d-flex gap-2 align-items-center">
                 <button
                   className="btn btn-outline-danger btn-sm fw-medium"
                   onClick={handleDeleteContainer}

@@ -1,5 +1,4 @@
 import React, {
-  ChangeEventHandler,
   FormEventHandler,
   FunctionComponent,
   PropsWithChildren,
@@ -58,13 +57,9 @@ const NewFormDialogComponent: FunctionComponent<
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const newFormData = {
-      formName: e.currentTarget.formName.value || "",
+      formName: e.currentTarget.formName.value,
+      formId: e.currentTarget.formId.value,
     };
-
-    if (newFormData.formName === "") {
-      showModalStrip("danger", "Form name cannot be empty", 5000);
-      return;
-    }
 
     setCreatingForm(true);
 
@@ -72,7 +67,7 @@ const NewFormDialogComponent: FunctionComponent<
       const template: TemplateType = await dispatch(
         addTemplate(newFormData),
       ).unwrap();
-      navigate(`/formbuilder/${template.id}`);
+      navigate(`/formbuilder/${template.publishStatus}-${template.formId}`);
     } catch (ex) {
       showModalStrip(
         "danger",
@@ -83,7 +78,7 @@ const NewFormDialogComponent: FunctionComponent<
   };
 
   useEffect(() => {
-    if (!authToken) dispatch(getToken());
+    if (!authToken) dispatch(getToken("GET AUTH TOKEN"));
   }, []);
 
   return (
@@ -106,6 +101,7 @@ const NewFormDialogComponent: FunctionComponent<
               <form onSubmit={handleFormSubmit}>
                 <div className="mb-3">
                   <TextField
+                    required
                     size="small"
                     label="Form Name"
                     name="formName"
@@ -115,6 +111,20 @@ const NewFormDialogComponent: FunctionComponent<
                     defaultValue=""
                   />
                 </div>
+
+                <div className="mb-3">
+                  <TextField
+                    required
+                    size="small"
+                    label="Form ID"
+                    name="formId"
+                    id="formId"
+                    key="formId"
+                    className="form-control"
+                    defaultValue=""
+                  />
+                </div>
+
                 <button
                   type="submit"
                   className="btn btn-sm btn-success fw-medium px-4"

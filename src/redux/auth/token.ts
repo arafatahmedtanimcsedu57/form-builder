@@ -14,7 +14,7 @@ interface AccessRequest {
   token: string;
 }
 
-export const getToken = createAsyncThunk(
+export const getToken = createAsyncThunk<string, string>(
   "auth/getToken",
 
   async (data, { dispatch }) => {
@@ -31,7 +31,7 @@ export const getToken = createAsyncThunk(
   },
 );
 
-export const setToken = createAsyncThunk(
+export const setToken = createAsyncThunk<string, AccessRequest>(
   "auth/setToken",
 
   async ({ token }: AccessRequest, { dispatch }) => {
@@ -48,7 +48,7 @@ export const setToken = createAsyncThunk(
   },
 );
 
-export const removeToken = createAsyncThunk(
+export const removeToken = createAsyncThunk<string, { action: string }>(
   "auth/removeTOken",
 
   async ({ action }: { action: string }, { dispatch }) => {

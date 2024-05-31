@@ -9,6 +9,7 @@ import { TemplateType } from "../../types/FormTemplateTypes";
 
 import Trash from "../../assets/svg/Trash";
 import Edit from "../../assets/svg/Edit";
+import Eye from "../../assets/svg/Eye";
 
 interface FormLayoutComponentProps {
   template: TemplateType | null;
@@ -26,27 +27,51 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
   return (
     <>
       {createdFormLayout ? (
-        <div className="d-flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="btn btn-sm btn-outline-warning px-2 fw-medium"
-            onClick={() =>
-              navigate(`/formbuilder/${(template as TemplateType).id}`)
-            }
-          >
-            <Edit width="16" height="16" />
-          </button>
-          <button
-            type="button"
-            className="btn btn-sm btn-outline-danger px-2 fw-medium"
-            onClick={() => {
-              if (confirm("Are you sure you want to delete the template?"))
-                dispatch(deleteTemplate(template?.id as string));
-            }}
-          >
-            <Trash width="16" height="16" />
-          </button>
-        </div>
+        (template as TemplateType).publishStatus === "draft" ? (
+          <div className="d-flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-warning px-2 fw-medium"
+              onClick={() =>
+                navigate(
+                  `/formbuilder/${(template as TemplateType).publishStatus}-${
+                    (template as TemplateType).formId
+                  }`,
+                )
+              }
+            >
+              <Edit width="16" height="16" />
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-danger px-2 fw-medium"
+              onClick={() => {
+                if (confirm("Are you sure you want to delete the template?"))
+                  dispatch(deleteTemplate(template?.id as string));
+              }}
+            >
+              <Trash width="16" height="16" />
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="d-flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-info px-2 fw-medium"
+                onClick={() =>
+                  navigate(
+                    `/formbuilder/${(template as TemplateType).publishStatus}-${
+                      (template as TemplateType).formId
+                    }`,
+                  )
+                }
+              >
+                <Eye width="16" height="16" />
+              </button>
+            </div>
+          </>
+        )
       ) : (
         <div>
           <button

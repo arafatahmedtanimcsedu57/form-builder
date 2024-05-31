@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
@@ -10,15 +10,14 @@ import {
 import DropContainerComponent from "./subcomponents/DropContainerComponent";
 import EditPropertiesComponent from "./subcomponents/EditPropertiesComponent";
 import FormPreview from "./subcomponents/FormPreview";
-import ConfirmationBeforePublish from "./subcomponents/ConfirmationBeforePublish";
 import LeftSidebar from "./LeftSidebar";
+import SaveConfirmation from "./SaveConfirmation";
 
 import useFormBuilder from "./hooks/useFormBuilder";
 import useFormPreview from "./hooks/useFormPreview";
-import useConfirmationBeforePublish from "./hooks/useConfimationBeforePublish";
 
 import { FormItemTypes } from "../../utils/formBuilderUtils";
-import { TemplateType } from "../../types/FormTemplateTypes";
+import { FileType, TemplateType } from "../../types/FormTemplateTypes";
 
 import ArrowLeft from "../../assets/svg/ArrowLeft";
 import Save from "../../assets/svg/Save";
@@ -33,9 +32,15 @@ if (process.env.NODE_ENV === "localhost") {
 
 interface FormBuilderProps {
   template: TemplateType;
+  file: FileType | null;
+  status: string | null;
 }
 
-const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
+const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
+  template,
+  file,
+  status,
+}) => {
   const {
     handleItemAdded,
     saveForm,
@@ -51,34 +56,35 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
     selectedControl,
   } = useFormBuilder({ template });
 
+  const navigate = useNavigate();
+  const [showSaveConfirmation, setShowSaveConfirmation] =
+    useState<boolean>(false);
+
   const { showPreview, openPreviewDrawer, closePreviewDrawer } =
     useFormPreview();
-  const { showConfirmation, handleShowConfirmation } =
-    useConfirmationBeforePublish();
-
-  const navigate = useNavigate();
 
   return (
     <>
       {!isMobile ? (
         <div className="d-flex flex-column h-100">
           <DndProvider backend={HTML5Backend}>
-            <div className="d-flex flex-row gap-5 justify-content-between w-100 h-100">
+            <div className="d-flex flex-row gap-4 justify-content-between w-100 h-100">
               <div
                 className="h-100 bg-white border-end"
                 style={{
                   overflowY: "auto",
-                  minWidth: "250px",
-                  maxWidth: "450px",
+                  minWidth: "300px",
+                  maxWidth: "300px",
                 }}
               >
                 <LeftSidebar
                   handleItemAdded={handleItemAdded}
                   formLayoutComponents={formLayoutComponents}
+                  file={file}
                 />
               </div>
 
-              <div className="d-flex flex-column h-100 flex-fill p-4">
+              <div className="d-flex flex-column h-100 flex-fill py-4">
                 <div className="col-lg-12 d-flex flex-column h-100">
                   <div className="d-flex flex-wrap justify-content-between gap-2">
                     <h5 className="">{selectedTemplate?.formName}</h5>
@@ -91,32 +97,26 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
                       >
                         <ArrowLeft width="16" height="16" />
                       </button>
-
-                      <button
-                        type="button"
-                        className="btn btn-sm bg-transparent text-success-emphasis fw-medium"
-                        onClick={saveForm}
-                      >
-                        <Save width="16" height="16" />
-                      </button>
-
-                      <button
-                        onClick={() => openPreviewDrawer()}
-                        className="btn btn-sm bg-transparent text-info-emphasis fw-medium"
-                        type="button"
-                      >
-                        <Eye width="16" height="16" />
-                      </button>
-
-                      <button
-                        onClick={handleShowConfirmation}
-                        className="btn btn-sm btn-primary px-4 fw-medium"
-                        type="button"
-                      >
-                        {showConfirmation
-                          ? "Toggle to Form Display"
-                          : "Toggle to JSON Display"}
-                      </button>
+                      {status === "draft" ? (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-sm bg-transparent text-success-emphasis fw-medium"
+                            onClick={() => saveForm(setShowSaveConfirmation)}
+                          >
+                            <Save width="16" height="16" />
+                          </button>
+                          <button
+                            onClick={() => openPreviewDrawer()}
+                            className="btn btn-sm bg-transparent text-info-emphasis fw-medium"
+                            type="button"
+                          >
+                            <Eye width="16" height="16" />
+                          </button>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
 
@@ -126,39 +126,30 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
                       overflowY: "auto",
                     }}
                   >
-                    {showConfirmation ? (
-                      <ConfirmationBeforePublish
-                        formLayoutComponents={formLayoutComponents}
-                        template={template}
-                      />
-                    ) : (
-                      <>
-                        {formLayoutComponents.map((layout, ind) => {
-                          return (
-                            <div>
-                              <DropContainerComponent
-                                key={layout.container.id}
-                                index={ind}
-                                layout={layout.container}
-                                selectedControl={selectedControl}
-                                childrenComponents={layout.children}
-                                deleteContainer={deleteContainer}
-                                deleteControl={deleteControl}
-                                selectControl={selectControl}
-                                accept={FormItemTypes.CONTROL}
-                                moveControl={moveControl}
-                              />
-                            </div>
-                          );
-                        })}
+                    {formLayoutComponents.map((layout, ind) => {
+                      return (
+                        <div>
+                          <DropContainerComponent
+                            key={layout.container.id}
+                            index={ind}
+                            layout={layout.container}
+                            selectedControl={selectedControl}
+                            childrenComponents={layout.children}
+                            deleteContainer={deleteContainer}
+                            deleteControl={deleteControl}
+                            selectControl={selectControl}
+                            accept={FormItemTypes.CONTROL}
+                            moveControl={moveControl}
+                          />
+                        </div>
+                      );
+                    })}
 
-                        <DropContainerComponent
-                          accept={FormItemTypes.CONTAINER}
-                          name={"Parent Component"}
-                          handleItemAdded={handleItemAdded}
-                        />
-                      </>
-                    )}
+                    <DropContainerComponent
+                      accept={FormItemTypes.CONTAINER}
+                      name={"Parent Component"}
+                      handleItemAdded={handleItemAdded}
+                    />
                   </div>
                 </div>
               </div>
@@ -166,8 +157,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
               <div
                 className="h-100 p-4 bg-white border-start"
                 style={{
-                  minWidth: "250px",
-                  maxWidth: "450px",
+                  minWidth: "350px",
+                  maxWidth: "350px",
                   overflowY: "auto",
                 }}
               >
@@ -201,6 +192,14 @@ const FormBuilder: React.FC<FormBuilderProps> = ({ template }) => {
           </div>
         </>
       )}
+
+      <SaveConfirmation
+        template={template}
+        formLayoutComponents={formLayoutComponents}
+        openDialog={showSaveConfirmation}
+        setOpenDialog={setShowSaveConfirmation}
+        file={file}
+      />
     </>
   );
 };

@@ -22,7 +22,7 @@ const Navbar: React.FC<PropsWithChildren<NavbarProps>> = ({}) => {
             className="navbar-brand d-flex align-align-items-center gap-2"
           >
             <img src={Logo} alt="logo" width="40px" height="40px" />
-            <span className="p-2 fw-bold lh-sm">Form Builder</span>
+            <span className="p-2 fw-bold lh-sm">DigReg Form Builder</span>
           </a>
 
           {authToken ? (

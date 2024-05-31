@@ -9,7 +9,7 @@ import {
   FormPublishStatus,
 } from "../../../utils/formBuilderUtils";
 import { generateID } from "../../../utils/common";
-import { convert } from "../../../utils/convert";
+
 import useModalStrip from "../../../global-hooks/useModalStrip";
 import {
   TemplateType,
@@ -232,59 +232,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     return true;
   };
 
-  const publishForm = () => {
-    if (formLayoutComponents.length === 0) {
-      showModalStrip("danger", "Form cannot be empty", 5000);
-      return;
-    }
-
-    if (!checkIfControlsInContainer()) return;
-    const data = convert(formLayoutComponents);
-
-    console.log({
-      formName: selectedTemplate?.formName,
-      blocks: [...data.blocks],
-    });
-
-    let currentTemplate: TemplateType = JSON.parse(
-      JSON.stringify(selectedTemplate),
-    );
-
-    // if (
-    //   currentTemplate.publishHistory.length > 0 &&
-    //   JSON.stringify(currentTemplate.publishHistory[0].formLayoutComponents) ===
-    //     JSON.stringify(formLayoutComponents)
-    // ) {
-    //   showModalStrip(
-    //     "info",
-    //     "No Change in current & previous published version.",
-    //     5000,
-    //   );
-    //   return;
-    // }
-
-    let updatedAt = moment().unix() * 1000;
-
-    if (currentTemplate.lastPublishedAt !== "") {
-      currentTemplate.publishHistory.splice(0, 0, {
-        lastPublishedAt: currentTemplate.lastPublishedAt,
-        formLayoutComponents: currentTemplate.formLayoutComponents,
-      });
-    }
-    currentTemplate.formLayoutComponents = formLayoutComponents;
-    currentTemplate.publishStatus = FormPublishStatus.PUBLISHED;
-    currentTemplate.lastPublishedAt = updatedAt;
-    currentTemplate.updatedAt = updatedAt;
-
-    dispatch(saveTemplate(currentTemplate))
-      .unwrap()
-      .then((newTemplate) => {
-        setSelectedTemplate(newTemplate);
-        showModalStrip("success", "Changes in Form Published.", 5000);
-      });
-  };
-
-  const saveForm = () => {
+  const saveForm = (setShowSaveConfirmation: (arg0: boolean) => void) => {
     if (formLayoutComponents.length === 0) {
       showModalStrip("danger", "Form cannot be empty", 5000);
       return;
@@ -294,25 +242,15 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
     const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
 
-    // if (
-    //   JSON.stringify(currentTemplate.formLayoutComponents) ===
-    //   JSON.stringify(formLayoutComponents)
-    // ) {
-    //   showModalStrip(
-    //     "info",
-    //     "No Change in current & previous saved version.",
-    //     5000,
-    //   );
-    //   return;
-    // }
     currentTemplate.formLayoutComponents = formLayoutComponents;
     currentTemplate.publishStatus = FormPublishStatus.DRAFT;
     currentTemplate.updatedAt = moment().unix() * 1000;
 
     dispatch(saveTemplate(currentTemplate))
       .unwrap()
-      .then((resolvedvalue) => {
+      .then(() => {
         showModalStrip("success", "Changes in Form Saved.", 5000);
+        setShowSaveConfirmation(true);
       });
   };
 
@@ -325,7 +263,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     editControlProperties,
     moveControlFromSide,
     moveControl,
-    publishForm,
     saveForm,
     selectedTemplate,
     formLayoutComponents,

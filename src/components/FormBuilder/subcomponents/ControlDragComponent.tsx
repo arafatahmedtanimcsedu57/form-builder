@@ -53,7 +53,7 @@ const ControlDragComponent: FunctionComponent<ControlDragComponentProps> = (
 
   return (
     <div ref={drag} style={{ opacity, cursor: "move" }} className="col-6">
-      <div className="p-3 border w-10 h-100 d-flex align-items-center justify-content-center rounded-3">
+      <div className="text-nowrap p-3 border w-10 h-100 d-flex align-items-center justify-content-center rounded-3">
         {item.displayText}
       </div>
     </div>

@@ -1,6 +1,14 @@
+export interface FileType {
+  id: string;
+  fileName: string;
+  contentType: string;
+  creationDate: string;
+  modificationDate: string;
+}
 export interface TemplateType {
   formName: string;
   id: string;
+  formId: number;
   createdAt: string;
   updatedAt: string;
   lastPublishedAt: string;
@@ -8,6 +16,7 @@ export interface TemplateType {
   formLayoutComponents: FormLayoutComponentsType[];
   publishHistory: FormLayoutHistoryType[];
   creator: string;
+  file: FileType | null;
 }
 
 export interface FormLayoutComponentsType {

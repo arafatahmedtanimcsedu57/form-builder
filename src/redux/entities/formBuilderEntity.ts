@@ -13,27 +13,36 @@ import { generateID } from "../../utils/common";
 import convertForm from "../../utils/convertResponseToFormStruct";
 
 import apis from "../../service/Apis";
-import { SecureGet } from "../../service/axios.call";
+import { SecureGet, SecurePost } from "../../service/axios.call";
+import { Form } from "../../types/ResponseFormTypes";
 
 interface AddTemplateType {
   formName: string;
+  formId: string;
 }
 
-export const getAllTemplates = createAsyncThunk(
+interface GetSingleTemplateRequest {
+  formId: string;
+  status: string;
+}
+
+export const getAllTemplates = createAsyncThunk<TemplateType[], string>(
   "formBuilderEntity/getAllTemplates",
 
   async (data: string, { rejectWithValue, dispatch }) => {
     dispatch(openCircularProgress());
 
     try {
-      const { data }: { data: unknown[] } = await SecureGet({
+      const { data }: { data: Form[] } = await SecureGet<Form[]>({
         url: `${apis.BASE}/api/formStructure/`,
       });
+      const draftTemplates: TemplateType[] =
+        JSON.parse(getFromLocalStorage("templates")) || [];
 
       dispatch(closeCircularProgress());
-      const _data: TemplateType[] = data.map((item: any) => convertForm(item));
-      saveToLocalStorage("templates", JSON.stringify(_data));
-      return _data;
+      const _data: TemplateType[] = data.map((item: Form) => convertForm(item));
+
+      return [...draftTemplates, ..._data];
     } catch (error: any) {
       dispatch(closeCircularProgress());
 
@@ -44,40 +53,66 @@ export const getAllTemplates = createAsyncThunk(
   },
 );
 
-export const getSingleTemplate = createAsyncThunk(
+export const getSingleTemplate = createAsyncThunk<
+  TemplateType,
+  GetSingleTemplateRequest
+>(
   "formBuilderEntity/getSingleTemplate",
 
-  async (data: string, { dispatch }) => {
-    dispatch(openCircularProgress());
-    return await new Promise<TemplateType>((resolve) => {
-      const allTemplates: TemplateType[] = JSON.parse(
-        getFromLocalStorage("templates"),
-      );
+  async (
+    { formId, status }: GetSingleTemplateRequest,
+    { rejectWithValue, dispatch },
+  ) => {
+    if (status === "saved") {
+      dispatch(openCircularProgress());
 
-      const singleTemplate = allTemplates.filter((t) => t.id === data)[0];
+      try {
+        const { data }: { data: Form } = await SecureGet<Form>({
+          url: `${apis.BASE}/api/formStructure/by-form-id/${formId}`,
+        });
 
-      setTimeout(() => {
         dispatch(closeCircularProgress());
-        resolve(singleTemplate);
-      }, 1000);
-    });
+
+        const _data: TemplateType = convertForm(data);
+        return _data;
+      } catch (error: any) {
+        dispatch(closeCircularProgress());
+
+        if (error.response && error.response.data.message)
+          return rejectWithValue(error.response.data.message);
+        else return rejectWithValue(error.message);
+      }
+    } else {
+      dispatch(openCircularProgress());
+      return await new Promise<TemplateType>((resolve, reject) => {
+        const allTemplates: TemplateType[] =
+          JSON.parse(getFromLocalStorage("templates")) || [];
+        const singleTemplate = allTemplates.filter(
+          (t) => String(t.formId) === String(formId),
+        )[0];
+        setTimeout(() => {
+          // Close the Circular Progress
+          dispatch(closeCircularProgress());
+          resolve(singleTemplate);
+        }, 1000);
+      });
+    }
   },
 );
 
 export const addTemplate = createAsyncThunk(
   "formBuilderEntity/addTemplate",
 
-  async ({ formName }: AddTemplateType) => {
+  async ({ formName, formId }: AddTemplateType) => {
     return await new Promise<TemplateType>((resolve) => {
-      const currentDateTime = moment().unix() * 1000;
-
-      const allTemplates: TemplateType[] = JSON.parse(
-        getFromLocalStorage("templates"),
-      );
+      const allTemplates: TemplateType[] =
+        JSON.parse(getFromLocalStorage("templates")) || [];
 
       const template: TemplateType = {
         id: generateID(),
         formName: formName,
+        file: null,
+        formId: Number(formId),
         createdAt: "",
         creator: "Test User",
         formLayoutComponents: [],
@@ -123,6 +158,7 @@ export const deleteTemplate = createAsyncThunk(
 
 export const saveTemplate = createAsyncThunk(
   "formBuilderEntity/saveTemplate",
+
   async (data: TemplateType, { dispatch }) => {
     dispatch(openCircularProgress());
     return await new Promise<TemplateType>((resolve) => {
@@ -136,10 +172,38 @@ export const saveTemplate = createAsyncThunk(
 
       setTimeout(() => {
         dispatch(closeCircularProgress());
+
+        //Call API to store
         saveToLocalStorage("templates", JSON.stringify(allTemplates));
         resolve(data);
       }, 1000);
     });
+  },
+);
+
+export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
+  "fromBuilderEntity/publishTemplate",
+
+  async (template: Partial<Form>, { dispatch, rejectWithValue }) => {
+    dispatch(openCircularProgress());
+
+    try {
+      const { data }: { data: any } = await SecurePost<any>({
+        url: `${apis.BASE}/api/formStructure/`,
+        data: { ...template },
+      });
+
+      dispatch(deleteTemplate(String(template.formId)));
+      dispatch(closeCircularProgress());
+
+      return data;
+    } catch (error: any) {
+      dispatch(closeCircularProgress());
+
+      if (error.response && error.response.data.message)
+        return rejectWithValue(error.response.data.message);
+      else return rejectWithValue(error.message);
+    }
   },
 );
 

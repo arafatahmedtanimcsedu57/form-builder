@@ -1,47 +1,4 @@
-type Option = {
-  id: string;
-  value: string;
-  label: string;
-};
-
-type Field = {
-  type: string;
-  id: string;
-  name: string;
-  label: string;
-  required: boolean;
-  options?: Option[];
-  placeholder?: string;
-  sequence: number;
-  information: string;
-};
-
-type Block = {
-  id: string;
-  title: string;
-  type: string;
-  sequence: number;
-  fields: Field[];
-  skipAble: boolean;
-};
-
-type Pdf = {
-  id: string;
-  fileName: string;
-  contentType: string;
-  creationDate: string;
-  modificationDate: string;
-};
-
-type Form = {
-  id: string;
-  formId: number;
-  formName: string;
-  pdf: Pdf;
-  blocks: Block[];
-  creationDate: string;
-  modificationDate: string;
-};
+import { Form } from "../types/ResponseFormTypes";
 
 function currentDateTime(date: string): string {
   return new Date(date).toISOString();
@@ -50,7 +7,9 @@ function currentDateTime(date: string): string {
 function convertForm(input: Form) {
   const converted = {
     id: input.id,
+    formId: input.formId,
     formName: input.formName,
+    file: input.pdf,
     createdAt: currentDateTime(input.creationDate),
     creator: "Test User",
     formLayoutComponents: input.blocks.map((block) => ({

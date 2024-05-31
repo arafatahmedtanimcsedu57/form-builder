@@ -356,12 +356,22 @@ function ControlViewComponent(props: ControlViewComponentProps) {
         style={{ ...wrapperStyle, opacity }}
       >
         <div className="col-12">
-          <div className="d-flex align-items-center justify-content-between">
-            <h5 className="fs-6">
-              {item.labelName}{" "}
-              <span className="text-danger">{item.required ? " *" : ""}</span>
-            </h5>
-            <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+              <h5 className="fs-6">
+                {item.labelName}{" "}
+                <span className="text-danger">{item.required ? " *" : ""}</span>
+              </h5>
+
+              {item.description !== "" ? (
+                <div className="">
+                  <p>{item.description}</p>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="d-flex gap-2">
               <button
                 className="btn btn-sm btn-outline-danger"
                 onClick={handleDeleteControl}
@@ -377,13 +387,7 @@ function ControlViewComponent(props: ControlViewComponentProps) {
               </button>
             </div>
           </div>
-          {item.description !== "" ? (
-            <>
-              <div className="">
-                <p>{item.description}</p>
-              </div>
-            </>
-          ) : null}
+
           <div className="mt-3">{renderItem(item)}</div>
         </div>
       </div>
