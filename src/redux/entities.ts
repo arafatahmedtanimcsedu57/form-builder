@@ -1,6 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import formBuildeeEntity from "./entities/formBuilderEntity";
+import formBuilderEntity from "./entities/formBuilderEntity";
+import clientEntity from "./entities/clientsEntity";
 
 export default combineReducers({
-  formBuilder: formBuildeeEntity,
+  formBuilder: formBuilderEntity,
+  client: clientEntity,
 });

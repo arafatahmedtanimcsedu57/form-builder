@@ -1,10 +1,5 @@
-export interface FileType {
-  id: string;
-  fileName: string;
-  contentType: string;
-  creationDate: string;
-  modificationDate: string;
-}
+import { FileType } from "./FileType";
+
 export interface TemplateType {
   formName: string;
   id: string;

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import moment from "moment";
 import _ from "lodash";
 
 import { getFromLocalStorage, saveToLocalStorage } from "../common";
@@ -8,13 +7,14 @@ import {
   openCircularProgress,
 } from "../uireducers/progress";
 
-import { TemplateType } from "../../types/FormTemplateTypes";
 import { generateID } from "../../utils/common";
 import convertForm from "../../utils/convertResponseToFormStruct";
 
 import apis from "../../service/Apis";
 import { SecureGet, SecurePost } from "../../service/axios.call";
+
 import { Form } from "../../types/ResponseFormTypes";
+import { TemplateType } from "../../types/FormTemplateTypes";
 
 interface AddTemplateType {
   formName: string;

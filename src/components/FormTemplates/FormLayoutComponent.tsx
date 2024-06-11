@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
+import gradient from "random-gradient";
 
 import { useAppDispatch } from "../../redux/hooks";
 import { deleteTemplate } from "../../redux/entities/formBuilderEntity";
@@ -28,10 +28,10 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
     <>
       {createdFormLayout ? (
         (template as TemplateType).publishStatus === "draft" ? (
-          <div className="d-flex flex-wrap gap-2">
+          <div className="d-flex flex-row-reverse flex-wrap gap-2">
             <button
               type="button"
-              className="btn btn-sm btn-outline-warning px-2 fw-medium"
+              className="btn btn-sm btn-warning px-2 fw-medium"
               onClick={() =>
                 navigate(
                   `/formbuilder/${(template as TemplateType).publishStatus}-${
@@ -44,7 +44,7 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
             </button>
             <button
               type="button"
-              className="btn btn-sm btn-outline-danger px-2 fw-medium"
+              className="btn btn-sm btn-danger px-2 fw-medium"
               onClick={() => {
                 if (confirm("Are you sure you want to delete the template?"))
                   dispatch(deleteTemplate(template?.id as string));
@@ -55,10 +55,10 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
           </div>
         ) : (
           <>
-            <div className="d-flex flex-wrap gap-2">
+            <div className="w-100 d-flex justify-content-end flex-wrap gap-2">
               <button
                 type="button"
-                className="btn btn-sm btn-outline-info px-2 fw-medium"
+                className="btn btn-sm btn-info px-2 fw-medium"
                 onClick={() =>
                   navigate(
                     `/formbuilder/${(template as TemplateType).publishStatus}-${
@@ -79,7 +79,7 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
             onClick={() => {
               return setOpenDialog ? setOpenDialog(true) : null;
             }}
-            className="btn btn-sm btn-primary px-4 fw-medium shadow-sm mb-3"
+            className="btn btn-primary shadow px-5 fw-medium mb-3"
           >
             Let's Create
           </button>
@@ -111,16 +111,37 @@ const FormLayoutComponent: React.FC<
 
   return (
     <>
-      <div className={className} style={{ ...cardStyle }}>
+      <div
+        className={className}
+        style={{
+          ...cardStyle,
+        }}
+      >
         <div className="card-body d-flex flex-column justify-content-between p-4">
           <div className="d-flex gap-2 justify-content-between align-items-center flex-wrap">
-            <div className={template ? "" : `w-100`}>
+            <div
+              className={
+                template ? "d-flex gap-2 align-items-center" : `w-100 `
+              }
+            >
+              {/* <div
+                className="rounded-2"
+                style={{
+                  minWidth: "10px",
+                  minHeight: "10px",
+                  height: "10px",
+                  background: template ? gradient(template.id, "vertical") : "",
+                }}
+              ></div> */}
               <h5 className="card-title text-dark-emphasis">{title}</h5>
             </div>
           </div>
 
-          <p className="card-text text-dark-emphasis">{description}</p>
-
+          {description ? (
+            <p className="card-text text-dark-emphasis">{description}</p>
+          ) : (
+            <></>
+          )}
           {!template ? (
             <ActionSection
               template={template}
@@ -131,7 +152,7 @@ const FormLayoutComponent: React.FC<
             <></>
           )}
 
-          {lastOpened ? (
+          {/* {lastOpened ? (
             <p className="card-text fw-light ">
               <span className="tex-muted">You Opened . </span>
               <span className="text-dark">
@@ -149,7 +170,7 @@ const FormLayoutComponent: React.FC<
             </div>
           ) : (
             <></>
-          )}
+          )} */}
 
           {template ? (
             <ActionSection

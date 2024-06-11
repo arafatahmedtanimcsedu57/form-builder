@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { removeToken } from "../redux/auth/token";
 
-import Logo from "./../assets/img-logo.png";
+import Logo from "./../assets/vh-logo.png";
 
 interface NavbarProps {}
 
@@ -15,18 +15,23 @@ const Navbar: React.FC<PropsWithChildren<NavbarProps>> = ({}) => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg border-bottom">
-        <div className="container">
+      <nav className="navbar navbar-expand-lg border-bottom bg-white">
+        <div className="container-fluid">
           <a
             href="/"
-            className="navbar-brand d-flex align-align-items-center gap-2"
+            className="navbar-brand d-flex align-align-items-center gap-2 d-flex align-items-center"
           >
-            <img src={Logo} alt="logo" width="40px" height="40px" />
-            <span className="p-2 fw-bold lh-sm">DigReg Form Builder</span>
+            <img src={Logo} alt="logo" width="180px" height="60px" />
+            <span className="p-2 fw-bold lh-sm text-primary border-start border-primary-subtle text-primary-gradient">
+              DigReg Form Builder
+            </span>
           </a>
 
           {authToken ? (
-            <span onClick={() => handleLogout()} className="btn navbar-text">
+            <span
+              onClick={() => handleLogout()}
+              className="btn btn-outline-info px-4 btn-sm navbar-text fw-bold"
+            >
               Logout
             </span>
           ) : (

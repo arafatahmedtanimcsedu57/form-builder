@@ -6,6 +6,7 @@ import {
   FormLayoutComponentsType,
 } from "../../../types/FormTemplateTypes";
 import ThreeDotsVertical from "../../../assets/svg/ThreeDotsVertical";
+import Plus from "../../../assets/svg/Plus";
 
 interface ControlDragComponentProps {
   handleItemAdded: (
@@ -52,9 +53,15 @@ const ControlDragComponent: FunctionComponent<ControlDragComponentProps> = (
   const opacity = isDragging ? 0.4 : 1;
 
   return (
-    <div ref={drag} style={{ opacity, cursor: "move" }} className="col-6">
-      <div className="text-nowrap p-3 border w-10 h-100 d-flex align-items-center justify-content-center rounded-3">
-        {item.displayText}
+    <div ref={drag} style={{ opacity, cursor: "move" }} className="col-12">
+      <div className="bg-white text-nowrap px-2 py-2 border w-10 h-100 d-flex align-items-center justify-content-between gap-2 rounded-3">
+        <div className="d-flex align-items-center">
+          <ThreeDotsVertical width="16" height="16" />
+          <div className="fs-7">{item.displayText}</div>
+        </div>
+        <div className="bg-light p-2 rounded">
+          <Plus width="16" height="16" />
+        </div>
       </div>
     </div>
   );

@@ -373,7 +373,7 @@ function ControlViewComponent(props: ControlViewComponentProps) {
             </div>
             <div className="d-flex gap-2">
               <button
-                className="btn btn-sm btn-outline-danger"
+                className="btn btn-sm btn-danger"
                 onClick={handleDeleteControl}
               >
                 <Trash width="16" height="16" />

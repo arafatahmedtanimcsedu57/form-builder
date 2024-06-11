@@ -63,7 +63,7 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
           </div>
         </div>
 
-        <div className="container p-4 border-bottom">
+        <div className="container p-4 bg-light border-bottom">
           <div className="row g-2">
             {FormControlList.map((control) => {
               return (
@@ -104,7 +104,7 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
               />
               <button
                 type="button"
-                className="btn btn-sm btn-outline-primary fw-medium px-4"
+                className="btn btn-sm btn-primary fw-medium px-4"
                 onClick={() => handleUpload()}
               >
                 Upload

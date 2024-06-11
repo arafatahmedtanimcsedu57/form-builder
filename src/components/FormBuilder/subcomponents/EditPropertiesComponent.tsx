@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, PropsWithChildren, useEffect, useState } from "react";
 import _ from "lodash";
 
 import {
@@ -46,7 +46,9 @@ interface EditPropertiesComponentProps {
   ) => void;
 }
 
-const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
+const EditPropertiesComponent: FC<
+  PropsWithChildren<EditPropertiesComponentProps>
+> = (props) => {
   const {
     selectedControl,
     selectControl,
@@ -312,34 +314,19 @@ const EditPropertiesComponent: FC<EditPropertiesComponentProps> = (props) => {
                     />
                   </div>
 
-                  {childUpdatedItem.controlName ===
-                    FormControlNames.INPUTTEXTFIELD ||
-                  childUpdatedItem.controlName ===
-                    FormControlNames.INPUTMULTILINE ||
-                  childUpdatedItem.controlName === FormControlNames.CHECKBOX ||
-                  childUpdatedItem.controlName ===
-                    FormControlNames.RADIOGROUP ||
-                  childUpdatedItem.controlName ===
-                    FormControlNames.SELECTDROPDOWN ||
-                  childUpdatedItem.controlName ===
-                    FormControlNames.SIGNATURE ? (
-                    <>
-                      <div className="mb-3">
-                        <TextField
-                          id="field-placeholder"
-                          key="field-placeholder"
-                          size="small"
-                          label="Field Placeholder"
-                          name="placeholder"
-                          value={childUpdatedItem.placeholder}
-                          onChange={handleChange}
-                          className="form-control"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <div className="mb-3">
+                    <TextField
+                      id="field-placeholder"
+                      key="field-placeholder"
+                      size="small"
+                      label="Field Placeholder"
+                      name="placeholder"
+                      value={childUpdatedItem.placeholder}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+
                   <div className="mb-3">
                     <TextField
                       id="field-information"

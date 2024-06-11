@@ -84,7 +84,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                 />
               </div>
 
-              <div className="d-flex flex-column h-100 flex-fill py-4">
+              <div className="d-flex flex-column flex-fill h-100 py-4">
                 <div className="col-lg-12 d-flex flex-column h-100">
                   <div className="d-flex flex-wrap justify-content-between gap-2">
                     <h5 className="">{selectedTemplate?.formName}</h5>
@@ -92,26 +92,26 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                     <div className="d-flex gap-2 flex-wrap">
                       <button
                         onClick={() => navigate("/")}
-                        className="btn btn-sm bg-transparent text-dark-emphasis fw-medium"
+                        className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
                         type="button"
                       >
-                        <ArrowLeft width="16" height="16" />
+                        <ArrowLeft width="16" height="16" /> <div>Back</div>
                       </button>
                       {status === "draft" ? (
                         <>
                           <button
                             type="button"
-                            className="btn btn-sm bg-transparent text-success-emphasis fw-medium"
+                            className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
                             onClick={() => saveForm(setShowSaveConfirmation)}
                           >
-                            <Save width="16" height="16" />
+                            <Save width="16" height="16" /> <div>Save</div>
                           </button>
                           <button
                             onClick={() => openPreviewDrawer()}
-                            className="btn btn-sm bg-transparent text-info-emphasis fw-medium"
+                            className="btn btn-sm bg-secondary px-4 text-light fw-medium d-flex gap-2 align-items-center"
                             type="button"
                           >
-                            <Eye width="16" height="16" />
+                            <Eye width="16" height="16" /> <div>Preview</div>
                           </button>
                         </>
                       ) : (
@@ -155,10 +155,10 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
               </div>
 
               <div
-                className="h-100 p-4 bg-white border-start"
+                className="h-100 p-4 bg-white border-start flex-fill"
                 style={{
                   minWidth: "350px",
-                  maxWidth: "350px",
+                  maxWidth: "950px",
                   overflowY: "auto",
                 }}
               >

@@ -10,7 +10,7 @@ import {
 } from "../uireducers/progress";
 import { SecurePost } from "../../service/axios.call";
 import apis from "../../service/Apis";
-import { FileType } from "../../types/FormTemplateTypes";
+import { FileType } from "../../types/FileType";
 
 interface FileUploadType {
   loading: boolean;

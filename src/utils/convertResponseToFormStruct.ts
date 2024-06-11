@@ -74,6 +74,12 @@ function convertControlName(type: string): string {
       return "checkbox";
     case "RADIO":
       return "radio-group";
+    case "FILE":
+      return "file-upload";
+    case "IMAGE":
+      return "image-upload";
+    case "CHECKBOX":
+      return "checkbox";
     default:
       return "unknown";
   }

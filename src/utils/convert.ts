@@ -11,6 +11,10 @@ const controllNameMap = {
   [FormControlNames.DATEFIELD]: "DATETIME",
   [FormControlNames.SELECTDROPDOWN]: "SELECT",
   [FormControlNames.SIGNATURE]: "SIGNATURE",
+  [FormControlNames.FILEUPLOAD]: "FILE",
+  [FormControlNames.IMAGEUPLOAD]: "IMAGE",
+  [FormControlNames.CHECKBOX]: "CHECKBOX",
+  [FormControlNames.INFORMATION]: "INFORMATION",
 };
 
 const convertChild = (child: any) => {

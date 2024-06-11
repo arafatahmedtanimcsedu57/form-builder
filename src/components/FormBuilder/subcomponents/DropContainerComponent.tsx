@@ -136,7 +136,7 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
               </div>
               <div className="d-flex gap-2 align-items-center">
                 <button
-                  className="btn btn-outline-danger btn-sm fw-medium"
+                  className="btn btn-danger btn-sm fw-medium"
                   onClick={handleDeleteContainer}
                 >
                   <Trash width="16" height="16" />
