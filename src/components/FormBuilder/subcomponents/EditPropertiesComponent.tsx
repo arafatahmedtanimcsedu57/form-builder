@@ -14,9 +14,9 @@ import {
 import ManageItemsListComponent from './ManageItemsListComponent';
 
 import {
+	FormLayoutComponentChildrenItemsType,
 	FormLayoutComponentChildrenType,
 	FormLayoutComponentContainerType,
-	FormLayoutCoponentChildrenItemsType,
 } from '../../../types/FormTemplateTypes';
 import {
 	FormControlNames,
@@ -104,10 +104,11 @@ const EditPropertiesComponent: FC<
 		}));
 	};
 
-	const addItemInList = (item: FormLayoutCoponentChildrenItemsType) => {
+	const addItemInList = (item: FormLayoutComponentChildrenItemsType) => {
 		const newItems = _.cloneDeep(
 			(updatedItem as FormLayoutComponentChildrenType).items,
 		);
+
 		if (newItems) newItems.push(item);
 		setUpdatedItem((prevState) => ({
 			...prevState,
@@ -115,7 +116,7 @@ const EditPropertiesComponent: FC<
 		}));
 	};
 
-	const deleteItemFromList = (item: FormLayoutCoponentChildrenItemsType) => {
+	const deleteItemFromList = (item: FormLayoutComponentChildrenItemsType) => {
 		const newItems = (
 			updatedItem as FormLayoutComponentChildrenType
 		).items?.filter((i) => i.id !== item.id);
@@ -125,10 +126,10 @@ const EditPropertiesComponent: FC<
 		}));
 	};
 
-	const editIteminList = (item: FormLayoutCoponentChildrenItemsType) => {
-		const newItems: FormLayoutCoponentChildrenItemsType[] = _.cloneDeep(
+	const editIteminList = (item: FormLayoutComponentChildrenItemsType) => {
+		const newItems: FormLayoutComponentChildrenItemsType[] = _.cloneDeep(
 			(updatedItem as FormLayoutComponentChildrenType).items,
-		) as FormLayoutCoponentChildrenItemsType[];
+		) as FormLayoutComponentChildrenItemsType[];
 
 		const itemToBeReplaced = newItems.filter((i) => i.id === item.id)[0];
 		itemToBeReplaced.value = item.value;
@@ -375,7 +376,11 @@ const EditPropertiesComponent: FC<
 										<></>
 									)}
 
-									<div className="d-flex flex-wrap gap-2">
+									<div className="mb-5"></div>
+									<hr />
+									<div className="mt-5"></div>
+
+									<div className="d-flex flex-row-reverse flex-wrap gap-2">
 										<button
 											type="submit"
 											className="btn btn-sm btn-warning px-4 fw-medium"
