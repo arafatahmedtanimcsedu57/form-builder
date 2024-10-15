@@ -35,6 +35,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 		| FormLayoutComponentChildrenType
 	>(undefined);
 
+	const [currentFormName, setCurrentFormName] = useState<string>('');
+
 	const dispatch = useAppDispatch();
 	const { showModalStrip } = useModalStrip();
 
@@ -120,7 +122,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
 	const editControlProperties = (item: FormLayoutComponentChildrenType) => {
 		const newState = formLayoutComponents.slice();
-		console.log(formLayoutComponents);
 		const formContainerId = newState.findIndex(
 			(comp) => comp.container.id === item.containerId,
 		);
@@ -255,6 +256,17 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 			});
 	};
 
+	const saveFormName = (name: string) => {
+		const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
+
+		currentTemplate.formName = name;
+		dispatch(saveTemplate(currentTemplate))
+			.unwrap()
+			.then(() => {
+				showModalStrip('success', 'Form Name Updated.', 5000);
+			});
+	};
+
 	return {
 		handleItemAdded,
 		deleteContainer,
@@ -265,9 +277,12 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 		moveControlFromSide,
 		moveControl,
 		saveForm,
+		setCurrentFormName,
+		saveFormName,
 		selectedTemplate,
 		formLayoutComponents,
 		selectedControl,
+		currentFormName,
 	};
 };
 

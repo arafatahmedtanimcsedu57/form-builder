@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
@@ -20,9 +20,20 @@ import { FormItemTypes } from '../../utils/formBuilderUtils';
 import { TemplateType } from '../../types/FormTemplateTypes';
 import { FileType } from '../../types/FileType';
 
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+import DirectionsIcon from '@mui/icons-material/Directions';
+
 import ArrowLeft from '../../assets/svg/ArrowLeft';
 import Save from '../../assets/svg/Save';
 import Eye from '../../assets/svg/Eye';
+import {
+	Divider,
+	IconButton,
+	InputBase,
+	Paper,
+	TextField,
+} from '@mui/material';
 
 let isMobile: boolean;
 if (process.env.NODE_ENV === 'localhost') {
@@ -52,17 +63,35 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 		moveControl,
 		moveControlFromSide,
 		selectControl,
+		saveFormName,
 		selectedTemplate,
 		formLayoutComponents,
 		selectedControl,
+		currentFormName,
+		setCurrentFormName,
 	} = useFormBuilder({ template });
+
+	console.log(
+		selectedTemplate,
+		selectedControl,
+		formLayoutComponents,
+		template,
+		currentFormName,
+		'selectedControl',
+	);
 
 	const navigate = useNavigate();
 	const [showSaveConfirmation, setShowSaveConfirmation] =
 		useState<boolean>(false);
 
+	const [editFormName, setEditFormName] = useState<boolean>(false);
+
 	const { showPreview, openPreviewDrawer, closePreviewDrawer } =
 		useFormPreview();
+
+	useEffect(() => {
+		console.log(currentFormName);
+	}, [currentFormName]);
 
 	return (
 		<>
@@ -88,9 +117,65 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 							<div className="d-flex flex-column flex-fill h-100 py-4">
 								<div className="col-lg-12 d-flex flex-column h-100">
 									<div className="d-flex flex-wrap justify-content-between gap-2">
-										<h5 className="">{selectedTemplate?.formName}</h5>
+										{editFormName ? (
+											<div>
+												{/* <TextField
+													type="text"
+													fullWidth={true}
+													placeholder="Enter a name"
+													variant="outlined"
+													size="small"
+													value={currentFormName}
+													onChange={(e) => setCurrentFormName(e.target.value)}
+													className="w-100"
+												/> */}
 
-										<div className="d-flex gap-2 flex-wrap">
+												<Paper
+													component="form"
+													sx={{
+														display: 'flex',
+														alignItems: 'center',
+														width: 400,
+													}}
+												>
+													<InputBase
+														size="small"
+														sx={{ ml: 1, flex: 1 }}
+														placeholder="Enter Form Name"
+														value={currentFormName}
+														onChange={(e) => setCurrentFormName(e.target.value)}
+													/>
+
+													<Divider
+														sx={{ height: 28, m: 0.5 }}
+														orientation="vertical"
+													/>
+													<IconButton
+														size="small"
+														color="primary"
+														aria-label="directions"
+														onClick={() => {
+															saveFormName(currentFormName || 'Example');
+															setEditFormName(false);
+															// navigate(0);
+														}}
+													>
+														<DirectionsIcon />
+													</IconButton>
+												</Paper>
+											</div>
+										) : (
+											<h5
+												className=""
+												onClick={() => {
+													setEditFormName(true);
+													setCurrentFormName(selectedTemplate?.formName || '');
+												}}
+											>
+												{currentFormName || selectedTemplate?.formName}
+											</h5>
+										)}
+										<div className="d-flex gap-2 flex-wrap h-100">
 											<button
 												onClick={() => navigate('/')}
 												className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
