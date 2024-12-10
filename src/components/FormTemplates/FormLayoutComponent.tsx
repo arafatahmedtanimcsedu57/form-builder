@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
-import gradient from 'random-gradient';
 
 import { useAppDispatch } from '../../redux/hooks';
 import { deleteTemplate } from '../../redux/entities/formBuilderEntity';
@@ -124,15 +123,6 @@ const FormLayoutComponent: React.FC<
 								template ? 'd-flex gap-2 align-items-center' : `w-100 `
 							}
 						>
-							{/* <div
-								className="rounded-2"
-								style={{
-									minWidth: '10px',
-									minHeight: '10px',
-									height: '10px',
-									background: template ? gradient(template.id, 'vertical') : '',
-								}}
-							></div> */}
 							<h5 className="card-title text-dark-emphasis">{title}</h5>
 						</div>
 					</div>
@@ -151,26 +141,6 @@ const FormLayoutComponent: React.FC<
 					) : (
 						<></>
 					)}
-
-					{/* {lastOpened ? (
-            <p className="card-text fw-light ">
-              <span className="tex-muted">You Opened . </span>
-              <span className="text-dark">
-                {moment(new Date(lastOpened)).format("MMM DD, YYYY")}
-              </span>
-            </p>
-          ) : (
-            <></>
-          )}
-          {creator ? (
-            <div>
-              <div className="my-2 fs-7 px-4 fw-light px-4 badge rounded-pill border border-primary-subtle bg-primary-subtle text-primary-emphasis">
-                {creator}
-              </div>
-            </div>
-          ) : (
-            <></>
-          )} */}
 
 					{template ? (
 						<ActionSection

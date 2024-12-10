@@ -1,81 +1,88 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Post } from '../../service/axios.call';
 import {
-  closeCircularProgress,
-  openCircularProgress,
-} from "../uireducers/progress";
-
-import apis from "../../service/Apis";
-import { Post } from "../../service/axios.call";
+	openCircularProgress,
+	closeCircularProgress,
+} from '../uireducers/progress';
+import apis from '../../service/Apis';
 
 interface LoginRequest {
-  username: string;
-  password: string;
+	username: string;
+	password: string;
 }
 
 interface LoginResponse {
-  token: string;
+	success: boolean;
+	message: string;
+	data: {
+		token: string;
+		permissions: string[];
+	};
 }
-interface Login {
-  loading: boolean;
-  userToken: string | null;
-  error: string | null;
-  success: boolean;
+
+interface LoginState {
+	loading: boolean;
+	userToken: string | null;
+	error: string | null;
+	success: boolean;
 }
 
 export const getLogin = createAsyncThunk<LoginResponse, LoginRequest>(
-  "auth/getLogedIn",
+	'auth/getLogedIn',
+	async ({ username, password }, { rejectWithValue, dispatch }) => {
+		dispatch(openCircularProgress());
 
-  async (
-    { username, password }: LoginRequest,
-    { rejectWithValue, dispatch },
-  ) => {
-    dispatch(openCircularProgress());
+		try {
+			const { data } = await Post<LoginResponse>({
+				url: `${apis.BASE}/${apis.PATH}/${apis.VERSION}/${apis.LOGIN}`,
+				data: {
+					login: username,
+					password,
+				},
+			});
 
-    try {
-      const { data } = await Post<LoginResponse>({
-        url: `${apis.BASE}/api/authentication/authenticate`,
-        data: { username, password },
-      });
+			if (!data.success) {
+				throw new Error(data.message);
+			}
 
-      dispatch(closeCircularProgress());
-      return data;
-    } catch (error: any) {
-      dispatch(closeCircularProgress());
-      if (error.response && error.response.data.message)
-        return rejectWithValue(error.response.data.message);
-      else return rejectWithValue(error.message);
-    }
-  },
+			return data;
+		} catch (error: any) {
+			const errorMessage =
+				error.response?.data?.message || error.message || 'An error occurred';
+			return rejectWithValue(errorMessage);
+		} finally {
+			dispatch(closeCircularProgress());
+		}
+	},
 );
 
-const initialState: Login = {
-  loading: false,
-  userToken: null,
-  error: null,
-  success: false,
+const initialState: LoginState = {
+	loading: false,
+	userToken: null,
+	error: null,
+	success: false,
 };
 
-const slice = createSlice({
-  name: "login",
-  initialState,
-  reducers: {},
-  extraReducers: {
-    [`${getLogin.pending}`]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-
-    [`${getLogin.fulfilled}`]: (state, { payload }) => {
-      state.loading = false;
-      state.userToken = payload;
-    },
-
-    [`${getLogin.rejected}`]: (state, { payload }) => {
-      state.loading = false;
-      state.error = payload;
-    },
-  },
+const loginSlice = createSlice({
+	name: 'login',
+	initialState,
+	reducers: {},
+	extraReducers: (builder) => {
+		builder
+			.addCase(getLogin.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(getLogin.fulfilled, (state, { payload }) => {
+				state.loading = false;
+				state.userToken = payload.data.token;
+				state.success = payload.success;
+			})
+			.addCase(getLogin.rejected, (state, { payload }) => {
+				state.loading = false;
+				state.error = payload as string;
+			});
+	},
 });
 
-export default slice.reducer;
+export default loginSlice.reducer;

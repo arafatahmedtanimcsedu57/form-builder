@@ -175,30 +175,36 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 												{currentFormName || selectedTemplate?.formName}
 											</h5>
 										)}
-										<div className="d-flex gap-2 flex-wrap h-100">
-											<button
-												onClick={() => navigate('/')}
-												className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
-												type="button"
-											>
-												<ArrowLeft width="16" height="16" /> <div>Back</div>
-											</button>
+										<div className="d-flex gap-2 flex-wrap">
+											<div>
+												<button
+													onClick={() => navigate('/')}
+													className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
+													type="button"
+												>
+													<ArrowLeft width="16" height="16" /> <div>Back</div>
+												</button>
+											</div>
 											{status === 'draft' ? (
 												<>
-													<button
-														type="button"
-														className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
-														onClick={() => saveForm(setShowSaveConfirmation)}
-													>
-														<Save width="16" height="16" /> <div>Save</div>
-													</button>
-													<button
-														onClick={() => openPreviewDrawer()}
-														className="btn btn-sm bg-secondary px-4 text-light fw-medium d-flex gap-2 align-items-center"
-														type="button"
-													>
-														<Eye width="16" height="16" /> <div>Preview</div>
-													</button>
+													<div>
+														<button
+															type="button"
+															className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
+															onClick={() => saveForm(setShowSaveConfirmation)}
+														>
+															<Save width="16" height="16" /> <div>Save</div>
+														</button>
+													</div>
+													<div>
+														<button
+															onClick={() => openPreviewDrawer()}
+															className="btn btn-sm bg-secondary px-4 text-light fw-medium d-flex gap-2 align-items-center"
+															type="button"
+														>
+															<Eye width="16" height="16" /> <div>Preview</div>
+														</button>
+													</div>
 												</>
 											) : (
 												<></>

@@ -1,65 +1,75 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import _ from "lodash";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { SecureGet } from '../../service/axios.call';
 import {
-  closeCircularProgress,
-  openCircularProgress,
-} from "../uireducers/progress";
+	closeCircularProgress,
+	openCircularProgress,
+} from '../uireducers/progress';
+import apis from '../../service/Apis';
+import type { ClientType, ClientResponseType } from '../../types/ClientType';
 
-import { SecureGet } from "../../service/axios.call";
-import apis from "../../service/Apis";
-
-import { ClientType } from "../../types/ClientType";
-
-interface ClientWithImageUrl extends Partial<Omit<ClientType, "file">> {
-  imageUrl: string;
+interface ClientWithImageUrl extends Omit<ClientType, 'logo'> {
+	imageUrl: string | null;
 }
 
-export const getAllClients = createAsyncThunk<ClientWithImageUrl[], string>(
-  "clientsEntity/getAllClients",
+// Helper function to fetch image URL
+const fetchClientImageUrl = async (logoId: string): Promise<string | null> => {
+	try {
+		const { data } = await SecureGet<{ success: boolean; data: string }>({
+			url: `${apis.BASE}/${apis.PATH}/${apis.VERSION}/${apis.IMAGE_PREVIEW}/${logoId}`,
+		});
+		return data.success ? data.data : null;
+	} catch {
+		return null; // Handle errors gracefully
+	}
+};
 
-  async (_: string, { rejectWithValue, dispatch }) => {
-    dispatch(openCircularProgress());
+export const getAllClients = createAsyncThunk<ClientWithImageUrl[], void>(
+	'clientsEntity/getAllClients',
+	async (_, { rejectWithValue, dispatch }) => {
+		dispatch(openCircularProgress());
 
-    try {
-      const { data }: { data: ClientType[] } = await SecureGet<ClientType[]>({
-        url: `${apis.BASE}/api/provider`,
-      });
+		try {
+			const { data } = await SecureGet<ClientResponseType>({
+				url: `${apis.BASE}/${apis.PATH}/${apis.VERSION}/${apis.PROVIDER}`,
+			});
 
-      const providersWithImages = await Promise.all(
-        data.map(async (client) => {
-          const { data: link }: { data: string } = await SecureGet({
-            url: `https://stg-digireg-b.allevia.md/api/multimedia/preview-file-with-id/${client.file.id}`,
-          });
+			if (!data.success) {
+				throw new Error(data.message);
+			}
 
-          return {
-            ...client,
-            imageUrl: link,
-          };
-        }),
-      );
+			// Fetch images for all clients in parallel
+			const providersWithImages = await Promise.all(
+				data.data.map(async (client) => ({
+					...client,
+					imageUrl: await fetchClientImageUrl(client.logo.id),
+				})),
+			);
 
-      return [...providersWithImages] as ClientWithImageUrl[];
-    } catch (error: any) {
-      dispatch(closeCircularProgress());
-
-      if (error.response && error.response.data.message)
-        return rejectWithValue(error.response.data.message);
-      else return rejectWithValue(error.message);
-    }
-  },
+			return providersWithImages;
+		} catch (error: any) {
+			return rejectWithValue(
+				error.response?.data?.message || error.message || 'An error occurred',
+			);
+		} finally {
+			dispatch(closeCircularProgress());
+		}
+	},
 );
 
-const slice = createSlice({
-  name: "clientEntity",
-  initialState: {
-    allClients: [] as ClientWithImageUrl[],
-  },
-  reducers: {},
-  extraReducers: {
-    [`${getAllClients.fulfilled}`]: (state, { payload }) => {
-      state.allClients = payload;
-    },
-  },
+const clientsSlice = createSlice({
+	name: 'clientsEntity',
+	initialState: {
+		allClients: [] as ClientWithImageUrl[],
+	},
+	reducers: {},
+	extraReducers: (builder) => {
+		builder.addCase(getAllClients.fulfilled, (state, action) => {
+			state.allClients = action.payload;
+		});
+		builder.addCase(getAllClients.rejected, (state, action) => {
+			console.error('Failed to fetch clients:', action.payload);
+		});
+	},
 });
 
-export default slice.reducer;
+export default clientsSlice.reducer;
