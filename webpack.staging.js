@@ -28,7 +28,7 @@ module.exports = merge(common, {
 		new HtmlWebpackPlugin({
 			title: 'Form Builder',
 			template: './public/index.html',
-			minify: false,
+			minify: true,
 		}),
 		new Dotenv({
 			path: './.env.staging',
