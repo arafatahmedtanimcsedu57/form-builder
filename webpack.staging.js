@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
 	devtool: 'inline-source-map',
-	mode: 'staging',
+	mode: 'development',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
 		filename: `bundle.js`,
