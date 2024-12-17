@@ -6,7 +6,7 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
-	devtool: 'inline-source-map',
+	devtool: 'source-map',
 	mode: 'production',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
