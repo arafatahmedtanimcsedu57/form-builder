@@ -6,8 +6,8 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
-	devtool: 'source-map',
-	mode: 'production',
+	devtool: 'inline-source-map',
+	mode: 'development',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
 		filename: `bundle.js`,
@@ -23,12 +23,12 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify('production'),
+			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Form Builder',
 			template: './public/index.html',
-			minify: true,
+			minify: false,
 		}),
 		new Dotenv({
 			path: './.env.staging',
