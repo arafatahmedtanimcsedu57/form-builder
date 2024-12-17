@@ -23,7 +23,7 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify('qa'),
+			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Form Builder',

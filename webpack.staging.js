@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
 	devtool: 'inline-source-map',
-	mode: 'staging',
+	mode: 'development',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
 		filename: `bundle.js`,
@@ -23,7 +23,7 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify('staging'),
+			'process.env.NODE_ENV': JSON.stringify('development'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Form Builder',
