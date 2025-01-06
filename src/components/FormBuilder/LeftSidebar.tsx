@@ -28,6 +28,7 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
 	formLayoutComponents,
 	file,
 }) => {
+	console.log(file, '>>>ARAFAT');
 	const dispatch = useAppDispatch();
 
 	const [currentFile, setCurrentFile] = useState<{ file: any }>({ file: '' });

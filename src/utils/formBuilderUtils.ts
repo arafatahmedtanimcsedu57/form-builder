@@ -59,7 +59,6 @@ export const FormControlList = [
 		icon: 'fas fa-cloud-upload-alt',
 		required: false,
 		category: 'media-elements',
-
 		containerId: '',
 		placeholder: 'Placeholder for File Upload',
 		name: 'File Upload',
@@ -93,6 +92,36 @@ export const FormControlList = [
 		name: 'Radio',
 		sequence: 0,
 	},
+
+	// {
+	// 	id: '',
+	// 	controlName: FormControlNames.CHECKLIST,
+	// 	displayText: 'Check List',
+	// 	description: 'Some Description about the field',
+	// 	labelName: 'Label for Select',
+	// 	itemType: FormItemTypes.CONTROL,
+	// 	icon: 'bi bi-dot-circle',
+	// 	required: false,
+	// 	category: 'other-elements',
+	// 	items: [
+	// 		{
+	// 			id: generateID(),
+	// 			value: 'Button__-1',
+	// 			label: 'Button 1',
+	// 		},
+	// 		{
+	// 			id: generateID(),
+	// 			value: 'Button__-2',
+	// 			label: 'Button 2',
+	// 		},
+	// 	],
+
+	// 	containerId: '',
+	// 	placeholder: 'Placeholder for Select',
+	// 	name: 'Check List',
+	// 	sequence: 0,
+	// },
+
 	{
 		id: '',
 		controlName: FormControlNames.INPUTTEXTFIELD,
@@ -193,14 +222,25 @@ export const FormControlList = [
 	{
 		id: '',
 		controlName: FormControlNames.CHECKBOX,
-		displayText: 'Checkbox',
+		displayText: 'Check Box',
 		description: 'Some Description about the field',
 		labelName: 'Label for Checkbox',
 		itemType: FormItemTypes.CONTROL,
 		icon: 'bi bi-check-square',
 		required: false,
 		category: 'other-elements',
-
+		items: [
+			{
+				id: generateID(),
+				value: 'Button__-1',
+				label: 'Button 1',
+			},
+			{
+				id: generateID(),
+				value: 'Button__-2',
+				label: 'Button 2',
+			},
+		],
 		containerId: '',
 		name: 'Checkbox',
 		sequence: 0,

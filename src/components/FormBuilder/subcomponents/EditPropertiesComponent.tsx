@@ -361,8 +361,7 @@ const EditPropertiesComponent: FC<
 										FormControlNames.RADIOGROUP ||
 									childUpdatedItem.controlName ===
 										FormControlNames.SELECTDROPDOWN ||
-									childUpdatedItem.controlName ===
-										FormControlNames.CHECKLIST ? (
+									childUpdatedItem.controlName === FormControlNames.CHECKBOX ? (
 										<>
 											<h6>Options</h6>
 											<ManageItemsListComponent

@@ -1,6 +1,7 @@
 export interface FileType {
-	creationDate: string;
 	id: string;
+	fileName: string;
+	creationDate: string;
 	modificationDate: string;
 	size: number;
 	unit: string;

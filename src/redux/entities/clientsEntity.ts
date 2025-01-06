@@ -23,7 +23,7 @@ const fetchClientImageUrl = async (logoId: string): Promise<string | null> => {
 	}
 };
 
-export const getAllClients = createAsyncThunk<ClientWithImageUrl[], void>(
+export const getAllClients = createAsyncThunk<ClientWithImageUrl[], string>(
 	'clientsEntity/getAllClients',
 	async (_, { rejectWithValue, dispatch }) => {
 		dispatch(openCircularProgress());

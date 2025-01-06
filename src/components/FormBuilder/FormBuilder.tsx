@@ -71,15 +71,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 		setCurrentFormName,
 	} = useFormBuilder({ template });
 
-	console.log(
-		selectedTemplate,
-		selectedControl,
-		formLayoutComponents,
-		template,
-		currentFormName,
-		'selectedControl',
-	);
-
 	const navigate = useNavigate();
 	const [showSaveConfirmation, setShowSaveConfirmation] =
 		useState<boolean>(false);
@@ -88,10 +79,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 
 	const { showPreview, openPreviewDrawer, closePreviewDrawer } =
 		useFormPreview();
-
-	useEffect(() => {
-		console.log(currentFormName);
-	}, [currentFormName]);
 
 	return (
 		<>
@@ -110,7 +97,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 								<LeftSidebar
 									handleItemAdded={handleItemAdded}
 									formLayoutComponents={formLayoutComponents}
-									file={file}
+									file={file} //form structure
 								/>
 							</div>
 
