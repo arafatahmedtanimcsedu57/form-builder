@@ -4,31 +4,26 @@ const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PACKAGE = require('./package.json');
+const version = PACKAGE.version;
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = merge(common, {
 	devtool: 'source-map',
 	mode: 'development',
 	output: {
-		path: path.join(__dirname, 'public/dist'),
-		filename: `bundle.js`,
+		path: path.join(__dirname, 'build'),
+		filename: `bundle-${version}.js`,
 		publicPath: '/',
 	},
-	devServer: {
-		static: {
-			directory: path.join(__dirname, 'public'),
-		},
-		port: 8081,
-		hot: true,
-		historyApiFallback: true,
+	optimization: {
+		minimizer: [new CssMinimizerPlugin()],
 	},
 	plugins: [
-		new webpack.DefinePlugin({
-			'process.env.NODE_ENV': JSON.stringify('development'),
-		}),
 		new HtmlWebpackPlugin({
 			title: 'Form Builder',
 			template: './public/index.html',
-			minify: false,
+			minify: true,
 		}),
 		new Dotenv({
 			path: './.env.qa',
