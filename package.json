@@ -38,7 +38,7 @@
 		"start:prod": "cross-env webpack --config webpack.prod.js",
 		"build": "npm version patch && cross-env webpack-dev-server --config webpack.dev.js",
 		"build:qa": "npm version patch && cross-env webpack-dev-server --config webpack.qa.js",
-		"build:staging": "npm version patch && cross-env webpack --config webpack.staging.js",
+		"build:staging": "npm version patch && cross-env webpack-dev-server --config webpack.staging.js",
 		"build:prod": "npm version patch && cross-env webpack --config webpack.prod.js"
 	},
 	"eslintConfig": {
