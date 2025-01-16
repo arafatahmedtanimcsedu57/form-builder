@@ -9,7 +9,8 @@ const version = PACKAGE.version;
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = merge(common, {
-	devtool: 'inline-source-map',
+	// devtool: 'inline-source-map',
+  devtool: "source-map",
 	mode: 'development',
 	output: {
 		// path: path.join(__dirname, 'public/dist'),
