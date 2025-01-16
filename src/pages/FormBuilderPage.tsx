@@ -56,8 +56,8 @@ const FormBuilderPage: React.FC<
 						}),
 					).unwrap();
 
-					const { file } = template;
-					await dispatch(setFormFile(file));
+					const { file } = template || {};
+					if (file) await dispatch(setFormFile(file));
 
 					if (!template) throw new Error('Not found');
 				} catch (ex) {
