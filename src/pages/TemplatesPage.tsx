@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { Card } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getAllTemplates } from '../redux/entities/formBuilderEntity';
@@ -7,7 +6,6 @@ import { getAllTemplates } from '../redux/entities/formBuilderEntity';
 import NewFormDialogComponent from '../components/FormTemplates/NewFormDialogComponent';
 import FormLayoutComponent from '../components/FormTemplates/FormLayoutComponent';
 
-import Arrow from './../assets/red-arrow.png';
 import { getAllClients } from '../redux/entities/clientsEntity';
 
 interface TemplatesPageProps {}
