@@ -377,20 +377,12 @@ function ControlViewComponent(props: ControlViewComponentProps) {
 	const opacity = isDragging ? 0 : 1;
 	drag(drop(ref));
 
-	// useEffect(() => {
-	// 	console.log('I am here', item, index);
-	// 	selectControl({
-	// 		...item,
-	// 		sequence: index + 1,
-	// 	});
-	// }, []);
-
 	return (
 		<>
 			<div
 				ref={ref}
 				className="row w-100 align-items-stretch justify-content-end px-2 py-4"
-				onClick={() => selectControl({ ...item, sequence: index + 1 })}
+				onClick={() => selectControl({ ...item })}
 				style={{ ...wrapperStyle, opacity }}
 			>
 				<div className="col-12">

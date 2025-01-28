@@ -62,9 +62,13 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 				(f) => f.container.id === containerId,
 			);
 			const formContainer = { ...newState[formContainerId] };
+			const currentEmptyPosition = formContainer.children
+				? formContainer.children.length
+				: 0;
 			const obj = {
 				...(item as FormLayoutComponentChildrenType),
 				id: generateID(),
+				sequence: currentEmptyPosition,
 				containerId: containerId,
 			};
 
@@ -76,6 +80,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 			newChildren.push(obj as FormLayoutComponentChildrenType);
 			formContainer.children = newChildren;
 			newState[formContainerId] = formContainer;
+
 			setFormLayoutComponents(newState);
 		}
 	};
@@ -155,7 +160,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 			sequence: Number(item.sequence || '0'),
 		};
 
-		// console.log(formContainer, 'formContainer');
 		newState[formContainerId] = formContainer;
 		// newState.sort((a, b) => a.container.sequence - b.container.sequence);
 
@@ -219,7 +223,16 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 				);
 				if (deletedItem.length === 0) return;
 
-				formContainer.children.splice(hoverIndex, 0, deletedItem[0]);
+				formContainer.children.splice(hoverIndex, 0, {
+					...deletedItem[0],
+				});
+
+				for (let i = 0; i < formContainer.children.length; i++) {
+					formContainer.children[i] = {
+						...formContainer.children[i],
+						sequence: i,
+					};
+				}
 			}
 			setFormLayoutComponents(componentsCopy);
 		}

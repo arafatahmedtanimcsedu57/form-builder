@@ -98,7 +98,6 @@ const EditPropertiesComponent: FC<
 		HTMLInputElement | HTMLTextAreaElement
 	> = (e) => {
 		const { name, value } = e.target;
-		console.log(name, value);
 		setUpdatedItem((prevState) => ({
 			...prevState,
 			[name]: value,
