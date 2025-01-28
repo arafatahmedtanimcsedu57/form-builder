@@ -98,6 +98,7 @@ const EditPropertiesComponent: FC<
 		HTMLInputElement | HTMLTextAreaElement
 	> = (e) => {
 		const { name, value } = e.target;
+		console.log(name, value);
 		setUpdatedItem((prevState) => ({
 			...prevState,
 			[name]: value,
@@ -199,6 +200,20 @@ const EditPropertiesComponent: FC<
 											className="form-control"
 											key="container-sub-heading"
 											id="container-sub-heading"
+										/>
+									</div>
+
+									<div className="mb-3">
+										<TextField
+											size="small"
+											label="Sequence"
+											name="sequence"
+											value={containerUpdatedItem.sequence}
+											onChange={handleChange}
+											className="form-control"
+											key="container-sub-heading"
+											id="container-sub-heading"
+											disabled
 										/>
 									</div>
 

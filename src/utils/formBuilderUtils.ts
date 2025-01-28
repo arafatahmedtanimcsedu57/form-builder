@@ -45,6 +45,7 @@ export const FormContainerList = [
 		subHeading: 'Block Text (optional)',
 		skipAble: false,
 		type: 'INPUT',
+		sequence: 0,
 	},
 ];
 

@@ -45,7 +45,7 @@ export const convert = (data: ConvertPropsType[]) => {
 		let index = 0;
 		for (const item of data as ConvertPropsType[]) {
 			const newItem: any = {};
-			newItem.sequence = ++index;
+			newItem.sequence = Number(item.container.sequence || '0');
 			newItem.title = item.container.heading;
 			newItem.fields = [];
 			newItem.type = item.container.type;

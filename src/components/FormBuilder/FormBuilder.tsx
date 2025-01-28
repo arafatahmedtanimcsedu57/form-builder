@@ -54,6 +54,10 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 	status,
 }) => {
 	const {
+		selectedTemplate,
+		formLayoutComponents,
+		selectedControl,
+		currentFormName,
 		handleItemAdded,
 		saveForm,
 		deleteContainer,
@@ -64,10 +68,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 		moveControlFromSide,
 		selectControl,
 		saveFormName,
-		selectedTemplate,
-		formLayoutComponents,
-		selectedControl,
-		currentFormName,
 		setCurrentFormName,
 	} = useFormBuilder({ template });
 

@@ -35,6 +35,7 @@ interface FormLayoutComponentContainerType {
 	desktopWidth?: number;
 	skipAble?: boolean;
 	type?: string;
+	sequence: number;
 }
 
 interface FormLayoutComponentChildrenType {

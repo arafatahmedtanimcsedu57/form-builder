@@ -46,10 +46,12 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 	) => {
 		if (item.itemType === FormItemTypes.CONTAINER) {
 			const newState = formLayoutComponents.slice();
+			const currentEmptyPosition = newState.length;
 			newState.push({
 				container: {
 					...(item as FormLayoutComponentContainerType),
 					id: generateID(),
+					sequence: currentEmptyPosition,
 				},
 				children: [],
 			});
@@ -150,8 +152,12 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 			subHeading: item.subHeading,
 			skipAble: item.skipAble,
 			type: item.type,
+			sequence: Number(item.sequence || '0'),
 		};
+
+		// console.log(formContainer, 'formContainer');
 		newState[formContainerId] = formContainer;
+		// newState.sort((a, b) => a.container.sequence - b.container.sequence);
 
 		setFormLayoutComponents(newState);
 	};
