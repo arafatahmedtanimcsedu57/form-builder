@@ -106,17 +106,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 									<div className="d-flex flex-wrap justify-content-between gap-2">
 										{editFormName ? (
 											<div>
-												{/* <TextField
-													type="text"
-													fullWidth={true}
-													placeholder="Enter a name"
-													variant="outlined"
-													size="small"
-													value={currentFormName}
-													onChange={(e) => setCurrentFormName(e.target.value)}
-													className="w-100"
-												/> */}
-
 												<Paper
 													component="form"
 													sx={{
@@ -144,7 +133,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 														onClick={() => {
 															saveFormName(currentFormName || 'Example');
 															setEditFormName(false);
-															// navigate(0);
 														}}
 													>
 														<DirectionsIcon />

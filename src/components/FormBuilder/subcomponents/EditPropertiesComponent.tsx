@@ -312,6 +312,7 @@ const EditPropertiesComponent: FC<
 											onChange={handleChange}
 											className="form-control"
 											size="small"
+											disabled
 										/>
 									</div>
 

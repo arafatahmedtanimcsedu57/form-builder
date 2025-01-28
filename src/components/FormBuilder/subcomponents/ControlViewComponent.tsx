@@ -195,7 +195,6 @@ const renderItem = (item: FormLayoutComponentChildrenType) => {
 		case FormControlNames.SCANCODE:
 			return (
 				<>
-					ffc107
 					<input
 						style={{ display: 'none' }}
 						id={item.controlName + item.id}
@@ -383,7 +382,7 @@ function ControlViewComponent(props: ControlViewComponentProps) {
 			<div
 				ref={ref}
 				className="row w-100 align-items-stretch justify-content-end px-2 py-4"
-				onClick={() => selectControl(item)}
+				onClick={() => selectControl({ ...item, sequence: index + 1 })}
 				style={{ ...wrapperStyle, opacity }}
 			>
 				<div className="col-12">
