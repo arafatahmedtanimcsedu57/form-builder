@@ -54,8 +54,9 @@ export const convert = (data: ConvertPropsType[]) => {
 				: false;
 
 			if ((item as any).children && (item as any).children.length) {
-				for (const itemChild of (item as any).children) {
-					newItem.fields.push(convertChild(itemChild));
+				for (let index = 0; index < (item as any).children.length; index++) {
+					const itemChild = (item as any).children[index];
+					newItem.fields.push(convertChild({ ...itemChild, sequence: index }));
 				}
 			}
 

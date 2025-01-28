@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 
@@ -277,12 +277,12 @@ interface ControlViewComponentProps {
 
 function ControlViewComponent(props: ControlViewComponentProps) {
 	const {
-		item,
-		deleteControl,
-		containerId,
-		selectControl,
-		selectedControl,
 		index,
+		item,
+		containerId,
+		selectedControl,
+		selectControl,
+		deleteControl,
 		moveControl,
 	} = props;
 
@@ -376,6 +376,14 @@ function ControlViewComponent(props: ControlViewComponentProps) {
 
 	const opacity = isDragging ? 0 : 1;
 	drag(drop(ref));
+
+	// useEffect(() => {
+	// 	console.log('I am here', item, index);
+	// 	selectControl({
+	// 		...item,
+	// 		sequence: index + 1,
+	// 	});
+	// }, []);
 
 	return (
 		<>
