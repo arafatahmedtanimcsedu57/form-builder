@@ -146,23 +146,58 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 	};
 
 	const editContainerProperties = (item: FormLayoutComponentContainerType) => {
-		const newState = formLayoutComponents.slice();
+		// Create a deep copy of the state to avoid modifying the original state
+		const newState = formLayoutComponents.map((comp) => ({
+			...comp,
+			container: { ...comp.container }, // Ensure container is also cloned
+		}));
+
+		// Find the index of the modified container
 		const formContainerId = newState.findIndex(
 			(comp) => comp.container.id === item.id,
 		);
-		const formContainer = { ...newState[formContainerId] };
-		formContainer.container = {
-			...formContainer.container,
+		if (formContainerId === -1) return; // Exit if not found
+
+		// Store old sequence and update the new one
+		const oldSequence = newState[formContainerId].container.sequence;
+		const newSequence =
+			Number(item.sequence || '0') < newState.length
+				? Number(item.sequence || '0')
+				: newState.length - 1;
+
+		// Update the sequence of the modified container
+		newState[formContainerId].container = {
+			...newState[formContainerId].container,
 			heading: item.heading,
 			subHeading: item.subHeading,
 			skipAble: item.skipAble,
 			type: item.type,
-			sequence: Number(item.sequence || '0'),
+			sequence: newSequence,
 		};
 
-		newState[formContainerId] = formContainer;
-		// newState.sort((a, b) => a.container.sequence - b.container.sequence);
+		// Adjust other elements' sequence accordingly
+		newState.forEach((comp) => {
+			if (comp.container.id !== item.id) {
+				if (
+					oldSequence < newSequence &&
+					comp.container.sequence > oldSequence &&
+					comp.container.sequence <= newSequence
+				) {
+					comp.container.sequence -= 1; // Move up
+				} else if (
+					oldSequence > newSequence &&
+					comp.container.sequence >= newSequence &&
+					comp.container.sequence < oldSequence
+				) {
+					comp.container.sequence += 1; // Move down
+				}
+			}
+		});
 
+		// Sort by sequence to reflect changes properly
+		newState.sort((a, b) => a.container.sequence - b.container.sequence);
+
+		// Update state
 		setFormLayoutComponents(newState);
 	};
 

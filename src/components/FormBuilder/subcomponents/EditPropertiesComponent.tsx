@@ -212,7 +212,6 @@ const EditPropertiesComponent: FC<
 											className="form-control"
 											key="container-sub-heading"
 											id="container-sub-heading"
-											disabled
 										/>
 									</div>
 
