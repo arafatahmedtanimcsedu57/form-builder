@@ -14,7 +14,7 @@ module.exports = merge(common, {
 	mode: 'development',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
-		filename: `bundle.js`,
+		filename: `bundle-${version}.js`,
 		publicPath: '/',
 	},
 	optimization: {

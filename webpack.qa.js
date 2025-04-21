@@ -3,6 +3,8 @@ const common = require('./webpack.common');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const PACKAGE = require('./package.json');
+const version = PACKAGE.version;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
@@ -10,7 +12,7 @@ module.exports = merge(common, {
 	mode: 'development',
 	output: {
 		path: path.join(__dirname, 'public/dist'),
-		filename: `bundle.js`,
+		filename: `bundle-${version}.js`,
 		publicPath: '/',
 	},
 	devServer: {
