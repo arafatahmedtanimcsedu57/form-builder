@@ -1,6 +1,6 @@
 {
 	"name": "frontend",
-	"version": "0.1.34",
+	"version": "0.2.0",
 	"private": true,
 	"dependencies": {
 		"@emotion/react": "^11.11.0",
@@ -39,7 +39,7 @@
 		"build": "cross-env webpack-dev-server --config webpack.dev.js",
 		"build:qa": "cross-env webpack-dev-server --config webpack.qa.js",
 		"build:staging": "cross-env webpack-dev-server --config webpack.staging.js",
-		"build:prod":"cross-env webpack --config webpack.prod.js"
+		"build:prod": "cross-env webpack --config webpack.prod.js"
 	},
 	"eslintConfig": {
 		"extends": [
