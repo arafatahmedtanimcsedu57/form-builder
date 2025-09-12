@@ -35,7 +35,10 @@ interface EditPropertiesComponentProps {
       | FormLayoutComponentContainerType
       | undefined
   ) => void;
-  editControlProperties: (updatedItem: FormLayoutComponentChildrenType) => void;
+  editControlProperties: (
+    status: string,
+    updatedItem: FormLayoutComponentChildrenType
+  ) => void;
   editContainerProperties: (
     updatedItem: FormLayoutComponentContainerType
   ) => void;
@@ -44,6 +47,7 @@ interface EditPropertiesComponentProps {
     selectedControl: FormLayoutComponentChildrenType,
     moveControlObj: FormLayoutComponentChildrenType
   ) => void;
+  status: string;
 }
 
 const EditPropertiesComponent: FC<
@@ -55,6 +59,7 @@ const EditPropertiesComponent: FC<
     editControlProperties,
     editContainerProperties,
     formLayoutComponents,
+    status,
   } = props;
 
   const [updatedItem, setUpdatedItem] = useState<
@@ -158,7 +163,10 @@ const EditPropertiesComponent: FC<
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
-    editControlProperties(updatedItem as FormLayoutComponentChildrenType);
+    editControlProperties(
+      status,
+      updatedItem as FormLayoutComponentChildrenType
+    );
   };
 
   const onContainerFormSubmit: React.FormEventHandler<HTMLFormElement> = (

@@ -125,19 +125,22 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
   ) => setSelectedControl(item);
 
   const editControlProperties = async (
+    status: string,
     item: FormLayoutComponentChildrenType
   ) => {
-    const convertedData = convertToRequest(item);
-    console.log("convertedData", convertedData);
+    if (status === "saved") {
+      const convertedData = convertToRequest(item);
+      console.log("convertedData", convertedData);
 
-    if (!convertedData.id) {
-      showModalStrip("danger", "Missing field id to update.", 5000);
-      return;
+      if (!convertedData.id) {
+        showModalStrip("danger", "Missing field id to update.", 5000);
+        return;
+      }
+
+      await dispatch(
+        updateField({ fieldId: convertedData.id, payload: convertedData })
+      ).unwrap();
     }
-
-    await dispatch(
-      updateField({ fieldId: convertedData.id, payload: convertedData })
-    ).unwrap();
 
     const newState = formLayoutComponents.slice();
     const formContainerId = newState.findIndex(

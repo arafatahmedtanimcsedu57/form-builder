@@ -248,7 +248,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   moveControlFromSide={moveControlFromSide}
                   editContainerProperties={editContainerProperties}
                   editControlProperties={editControlProperties}
-                  // status={status}
+                  status={status || ""}
                 />
               </div>
             </div>
