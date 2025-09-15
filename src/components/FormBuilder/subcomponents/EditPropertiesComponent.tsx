@@ -40,6 +40,8 @@ interface EditPropertiesComponentProps {
     updatedItem: FormLayoutComponentChildrenType
   ) => void;
   editContainerProperties: (
+    status: string,
+
     updatedItem: FormLayoutComponentContainerType
   ) => void;
   formLayoutComponents: FormLayoutComponentsType[];
@@ -173,7 +175,10 @@ const EditPropertiesComponent: FC<
     event
   ) => {
     event.preventDefault();
-    editContainerProperties(updatedItem as FormLayoutComponentContainerType);
+    editContainerProperties(
+      status,
+      updatedItem as FormLayoutComponentContainerType
+    );
   };
 
   return (

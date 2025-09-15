@@ -4,6 +4,7 @@ import moment from "moment";
 import { useAppDispatch } from "../../../redux/hooks";
 import {
   saveTemplate,
+  updateContainer,
   updateField,
 } from "../../../redux/entities/formBuilderEntity";
 
@@ -20,7 +21,10 @@ import {
   FormLayoutComponentChildrenType,
   FormLayoutComponentContainerType,
 } from "../../../types/FormTemplateTypes";
-import { convertToRequest } from "../../../utils/convertResponseToFormStruct";
+import {
+  convertContainerToRequest,
+  convertToRequest,
+} from "../../../utils/convertResponseToFormStruct";
 
 interface useFormBuilderProps {
   template: TemplateType;
@@ -160,8 +164,10 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     setFormLayoutComponents(newState);
   };
 
-  const editContainerProperties = (item: FormLayoutComponentContainerType) => {
-    console.log("item", item);
+  const editContainerProperties = async (
+    status: string,
+    item: FormLayoutComponentContainerType
+  ) => {
     const newState = formLayoutComponents.slice();
     const formContainerId = newState.findIndex(
       (comp) => comp.container.id === item.id
@@ -175,7 +181,18 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       type: item.type,
     };
 
-    console.log("formContainer", formContainer, ">>>>");
+    if (status === "saved") {
+      const convertedData = convertContainerToRequest(formContainer);
+
+      if (!convertedData.id) {
+        showModalStrip("danger", "Missing something", 5000);
+        return;
+      }
+
+      await dispatch(
+        updateContainer({ fieldId: convertedData.id, payload: convertedData })
+      ).unwrap();
+    }
 
     newState[formContainerId] = formContainer;
 

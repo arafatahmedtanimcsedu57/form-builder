@@ -232,6 +232,33 @@ export const updateField = createAsyncThunk<
     }
   }
 );
+
+export const updateContainer = createAsyncThunk<
+  { fieldId: string; response: any | null },
+  { fieldId: string; payload: unknown }
+>(
+  "formBuilderEntity/updateField",
+  async ({ fieldId, payload }, { dispatch, rejectWithValue }) => {
+    dispatch(openCircularProgress());
+    try {
+      const { data } = await SecurePut<any>({
+        url: `${apis.BASE}/api/block/${fieldId}`,
+        data: payload,
+      });
+
+      dispatch(closeCircularProgress());
+      return { fieldId, response: data ?? null };
+    } catch (error: any) {
+      dispatch(closeCircularProgress());
+      const msg =
+        error?.response?.data?.message ??
+        error?.message ??
+        "Failed to update field";
+      return rejectWithValue(msg);
+    }
+  }
+);
+
 const slice = createSlice({
   name: "formBuilderEntity",
   initialState: {
@@ -280,6 +307,10 @@ const slice = createSlice({
     },
 
     [`${updateField.fulfilled}`]: (state, _action) => {
+      // If you later want to cache field-by-id, do it here.
+    },
+
+    [`${updateContainer.fulfilled}`]: (state, _action) => {
       // If you later want to cache field-by-id, do it here.
     },
   },

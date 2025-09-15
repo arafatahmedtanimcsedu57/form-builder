@@ -29,6 +29,19 @@ function convertToRequest(data: any) {
   return converted;
 }
 
+function convertContainerToRequest(data: any) {
+  const converted = {
+    id: data?.container?.id,
+    title: data?.container?.heading,
+    type: data?.container?.type,
+    skipAble: data?.container?.skipAble,
+    sequence: data?.container?.sequence,
+    fields: data?.children?.map((child: any) => convertToRequest(child)) || [],
+  };
+
+  return converted;
+}
+
 function convertForm(input: Form) {
   const converted = {
     id: input.id,
@@ -46,8 +59,9 @@ function convertForm(input: Form) {
         icon: "fa fa-building",
         heading: block.title,
         subHeading: "",
+        sequence: block.sequence,
         skipAble: block.skipAble,
-        type: "INPUT",
+        type: block.type,
       },
       children: block.fields.map((field) => ({
         id: field.id,
@@ -194,5 +208,5 @@ function convertControlNameReverse(controlName: string): string {
   }
 }
 
-export { convertToRequest };
+export { convertToRequest, convertContainerToRequest };
 export default convertForm;
