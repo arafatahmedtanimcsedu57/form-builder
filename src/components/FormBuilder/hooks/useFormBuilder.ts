@@ -57,20 +57,24 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       newState.push({
         container: {
           ...(item as FormLayoutComponentContainerType),
-          id: generateID(),
+          // id: generateID(),
+          internalId: generateID(),
         },
         children: [],
       });
+
+      console.log(newState);
       setFormLayoutComponents(newState);
     } else if (item.itemType === FormItemTypes.CONTROL) {
       const newState = formLayoutComponents.slice();
       const formContainerId = newState.findIndex(
-        (f) => f.container.id === containerId
+        (f) => f.container.internalId === containerId
       );
       const formContainer = { ...newState[formContainerId] };
       const obj = {
         ...(item as FormLayoutComponentChildrenType),
-        id: generateID(),
+        // id: generateID(),
+        internalId: generateID(),
         containerId: containerId,
       };
 
@@ -82,6 +86,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       newChildren.push(obj as FormLayoutComponentChildrenType);
       formContainer.children = newChildren;
       newState[formContainerId] = formContainer;
+
+      console.log(newState);
       setFormLayoutComponents(newState);
     }
   };
@@ -132,12 +138,13 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     status: string,
     item: FormLayoutComponentChildrenType
   ) => {
-    if (status === "saved") {
+    console.log(item, ">>>");
+    if (status === "saved" && item.id) {
       const convertedData = convertToRequest(item);
       console.log("convertedData", convertedData);
 
       if (!convertedData.id) {
-        showModalStrip("danger", "Missing field id to update.", 5000);
+        showModalStrip("danger", "Update Block First", 5000);
         return;
       }
 
@@ -148,12 +155,12 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
     const newState = formLayoutComponents.slice();
     const formContainerId = newState.findIndex(
-      (comp) => comp.container.id === item.containerId
+      (comp) => comp.container.internalId === item.containerId
     );
     let formContainer = { ...newState[formContainerId] };
 
     formContainer?.children?.forEach((child, ind) => {
-      if (child.id === item.id) {
+      if (child.internalId === item.internalId) {
         const newChildren = formContainer.children.slice();
         newChildren[ind] = item;
         formContainer.children = newChildren;
@@ -170,7 +177,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
   ) => {
     const newState = formLayoutComponents.slice();
     const formContainerId = newState.findIndex(
-      (comp) => comp.container.id === item.id
+      (comp) => comp.container.internalId === item.internalId
     );
     const formContainer = { ...newState[formContainerId] };
     formContainer.container = {
@@ -181,7 +188,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       type: item.type,
     };
 
-    if (status === "saved") {
+    if (status === "saved" && formContainer.container.id) {
       const convertedData = convertContainerToRequest(formContainer);
 
       if (!convertedData.id) {
@@ -284,6 +291,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     }
 
     if (!checkIfControlsInContainer()) return;
+
+    console.log(selectedTemplate, formLayoutComponents);
 
     const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
 

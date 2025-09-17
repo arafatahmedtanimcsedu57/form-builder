@@ -64,11 +64,11 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     moveControlFromSide,
     selectControl,
     saveFormName,
+    setCurrentFormName, 
     selectedTemplate,
     formLayoutComponents,
     selectedControl,
     currentFormName,
-    setCurrentFormName,
   } = useFormBuilder({ template });
 
   const navigate = useNavigate();
@@ -209,7 +209,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                       return (
                         <div>
                           <DropContainerComponent
-                            key={layout.container.id}
+                            key={layout.container.internalId}
                             index={ind}
                             layout={layout.container}
                             selectedControl={selectedControl}

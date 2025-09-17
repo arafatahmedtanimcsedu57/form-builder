@@ -38,7 +38,7 @@ const ControlDragComponent: FunctionComponent<ControlDragComponentProps> = (
           if (item.itemType === "container") {
             handleItemAdded(item);
           } else if (item.itemType === "control") {
-            handleItemAdded(item, dropResult.id);
+            handleItemAdded(item, dropResult.internalId);
           }
         }
       },
