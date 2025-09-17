@@ -27,7 +27,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
 
     try {
       const { data } = await SecurePost<FileType>({
-        url: `${apis.BASE}/api/multimedia/upload-file`,
+        url: `${apis.BASE}/api/v1/multimedia/upload-file`,
         data: file,
         headers: {
           "content-type": "multipart/form-data",
@@ -43,7 +43,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
         return rejectWithValue(error.response.data.message);
       else return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 export const setFormFile = createAsyncThunk<FileType | null, FileType | null>(
@@ -58,7 +58,7 @@ export const setFormFile = createAsyncThunk<FileType | null, FileType | null>(
         resolve(file);
       }, 1000);
     });
-  },
+  }
 );
 
 export const resetFormFile = createAsyncThunk<FileType, FileType>(
@@ -73,7 +73,7 @@ export const resetFormFile = createAsyncThunk<FileType, FileType>(
         resolve(file);
       }, 1000);
     });
-  },
+  }
 );
 
 const initialState: FileUploadType = {
