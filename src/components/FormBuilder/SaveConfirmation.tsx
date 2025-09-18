@@ -1,72 +1,75 @@
-import React, { PropsWithChildren } from 'react';
-import { Dialog, DialogContent } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import ConfirmationBeforePublish from './subcomponents/ConfirmationBeforePublish';
+import React, { PropsWithChildren } from "react";
+import { Dialog, DialogContent } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import ConfirmationBeforePublish from "./subcomponents/ConfirmationBeforePublish";
 
-import { useAppDispatch } from '../../redux/hooks';
-import { publishTemplate } from '../../redux/entities/formBuilderEntity';
+import { useAppDispatch } from "../../redux/hooks";
+import { publishTemplate } from "../../redux/entities/formBuilderEntity";
 
-import { convert } from '../../utils/convert';
+import { convert } from "../../utils/convert";
 
 import {
-	FormLayoutComponentsType,
-	TemplateType,
-} from '../../types/FormTemplateTypes';
-import type { FileType } from '../../types/FileType';
+  FormLayoutComponentsType,
+  TemplateType,
+} from "../../types/FormTemplateTypes";
+import type { FileType } from "../../types/FileType";
 
 interface SaveConfirmationDialogComponentProps {
-	openDialog: boolean;
-	setOpenDialog: (arg: boolean) => void;
-	formLayoutComponents: FormLayoutComponentsType[];
-	template: TemplateType;
-	file: FileType | null;
+  openDialog: boolean;
+  setOpenDialog: (arg: boolean) => void;
+  formLayoutComponents: FormLayoutComponentsType[];
+  template: TemplateType;
+  file: FileType | null;
 }
 
 const SaveConfirmation: React.FC<
-	PropsWithChildren<SaveConfirmationDialogComponentProps>
+  PropsWithChildren<SaveConfirmationDialogComponentProps>
 > = ({ openDialog, setOpenDialog, formLayoutComponents, template, file }) => {
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-	const jsonData = {
-		formId: template?.formId,
-		formName: template?.formName,
-		pdf: file,
-		blocks: [...convert(formLayoutComponents).blocks],
-	};
+  console.log(template, "Template");
 
-	const handleFormSubmit = async () => {
-		await dispatch(publishTemplate(jsonData));
+  const jsonData = {
+    ...(template?.id ? { id: template?.id } : {}),
+    formId: template?.formId,
+    formName: template?.formName,
+    pdf: file,
+    blocks: [...convert(formLayoutComponents).blocks],
+  };
 
-		setOpenDialog(false);
-		navigate('/');
-	};
+  const handleFormSubmit = async () => {
+    await dispatch(publishTemplate(jsonData));
 
-	return (
-		<>
-			<Dialog
-				open={openDialog}
-				fullWidth
-				maxWidth="lg"
-				onClose={() => setOpenDialog(false)}
-			>
-				<DialogContent className="modal-content">
-					<ConfirmationBeforePublish jsonData={jsonData} />
+    setOpenDialog(false);
+    navigate("/");
+  };
 
-					<div>
-						<p>Want to publish it ?</p>
-						<button
-							type="submit"
-							className="btn btn-sm btn-primary px-4 fw-medium"
-							onClick={() => handleFormSubmit()}
-						>
-							Publish
-						</button>
-					</div>
-				</DialogContent>
-			</Dialog>
-		</>
-	);
+  return (
+    <>
+      <Dialog
+        open={openDialog}
+        fullWidth
+        maxWidth="lg"
+        onClose={() => setOpenDialog(false)}
+      >
+        <DialogContent className="modal-content">
+          <ConfirmationBeforePublish jsonData={jsonData} />
+
+          <div>
+            <p>Want to publish it ?</p>
+            <button
+              type="submit"
+              className="btn btn-sm btn-primary px-4 fw-medium"
+              onClick={() => handleFormSubmit()}
+            >
+              Publish
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 
 export default SaveConfirmation;

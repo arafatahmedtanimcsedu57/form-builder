@@ -15,6 +15,7 @@ import { SecureGet, SecurePost, SecurePut } from "../../service/axios.call";
 
 import { Form } from "../../types/ResponseFormTypes";
 import { TemplateType } from "../../types/FormTemplateTypes";
+import { AxiosError } from "axios";
 
 interface AddTemplateType {
   formName: string;
@@ -109,7 +110,8 @@ export const addTemplate = createAsyncThunk(
         JSON.parse(getFromLocalStorage("templates")) || [];
 
       const template: TemplateType = {
-        id: generateID(),
+        // id: generateID(),
+
         formName: formName,
         file: null,
         formId: Number(formId),
@@ -183,29 +185,67 @@ export const saveTemplate = createAsyncThunk(
 
 export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
   "fromBuilderEntity/publishTemplate",
-
-  async (template: Partial<Form>, { dispatch, rejectWithValue }) => {
+  async (template, { dispatch, rejectWithValue }) => {
     dispatch(openCircularProgress());
 
+    const isUpdate = Boolean(template?.id);
+    const url = isUpdate
+      ? `${apis.BASE}/api/formStructure/${template!.id}`
+      : `${apis.BASE}/api/formStructure/`;
+
     try {
-      const { data }: { data: any } = await SecurePost<any>({
-        url: `${apis.BASE}/api/formStructure/`,
+      const httpCall = isUpdate ? SecurePut<any> : SecurePost<any>;
+      const { data } = await httpCall({
+        url,
         data: { ...template },
       });
 
-      dispatch(deleteTemplate(String(template.formId)));
-      dispatch(closeCircularProgress());
+      // If this was a brand-new publish, remove the local draft (if you keep one)
+      if (!isUpdate && template.formId != null) {
+        dispatch(deleteTemplate(String(template.formId)));
+      }
 
+      dispatch(closeCircularProgress());
       return data;
-    } catch (error: any) {
+    } catch (err) {
       dispatch(closeCircularProgress());
 
-      if (error.response && error.response.data.message)
-        return rejectWithValue(error.response.data.message);
-      else return rejectWithValue(error.message);
+      const e = err as AxiosError<any>;
+      const message =
+        e?.response?.data?.message ??
+        (typeof e?.response?.data === "string" ? e.response.data : undefined) ??
+        (e?.message || "Something went wrong");
+
+      return rejectWithValue(message);
     }
   }
 );
+
+// export const updateTemplate = createAsyncThunk<any, Partial<Form>>(
+//   "fromBuilderEntity/publishAgainTemplate",
+
+//   async (template: Partial<Form>, { dispatch, rejectWithValue }) => {
+//     dispatch(openCircularProgress());
+
+//     try {
+//       const { data }: { data: any } = await SecurePut<any>({
+//         url: `${apis.BASE}/api/formStructure/${template.formId}`,
+//         data: { ...template },
+//       });
+
+//       dispatch(deleteTemplate(String(template.formId)));
+//       dispatch(closeCircularProgress());
+
+//       return data;
+//     } catch (error: any) {
+//       dispatch(closeCircularProgress());
+
+//       if (error.response && error.response.data.message)
+//         return rejectWithValue(error.response.data.message);
+//       else return rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 export const updateField = createAsyncThunk<
   { fieldId: string; response: any | null },

@@ -2,7 +2,7 @@ import { FileType } from "./FileType";
 
 export interface TemplateType {
   formName: string;
-  id: string;
+  id?: string;
   formId: number;
   createdAt: string;
   updatedAt: string;

@@ -6,6 +6,7 @@ import {
   saveTemplate,
   updateContainer,
   updateField,
+  // updateTemplate,
 } from "../../../redux/entities/formBuilderEntity";
 
 import {
@@ -308,6 +309,29 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       });
   };
 
+  // const updateForm = (setShowSaveConfirmation: (arg0: boolean) => void) => {
+  //   if (formLayoutComponents.length === 0) {
+  //     showModalStrip("danger", "Form cannot be empty", 5000);
+  //     return;
+  //   }
+
+  //   if (!checkIfControlsInContainer()) return;
+
+  //   const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
+
+  //   currentTemplate.formLayoutComponents = formLayoutComponents;
+  //   currentTemplate.publishStatus = FormPublishStatus.DRAFT;
+  //   currentTemplate.updatedAt = moment().unix() * 1000;
+
+  //   console.log(currentTemplate);
+  //   dispatch(updateTemplate(currentTemplate))
+  //     .unwrap()
+  //     .then(() => {
+  //       showModalStrip("success", "Changes in Form Saved.", 5000);
+  //       setShowSaveConfirmation(true);
+  //     });
+  // };
+
   const saveFormName = (name: string) => {
     const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
 
@@ -329,6 +353,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     moveControlFromSide,
     moveControl,
     saveForm,
+    // updateForm,
     setCurrentFormName,
     saveFormName,
     selectedTemplate,

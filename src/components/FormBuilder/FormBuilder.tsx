@@ -64,7 +64,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     moveControlFromSide,
     selectControl,
     saveFormName,
-    setCurrentFormName, 
+    setCurrentFormName,
+    // updateForm,
     selectedTemplate,
     formLayoutComponents,
     selectedControl,
@@ -163,26 +164,36 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                       </h5>
                     )}
                     <div className="d-flex gap-2 flex-wrap">
+                      {/* <div>
+                        <button
+                          type="button"
+                          className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
+                          onClick={() => updateForm(setShowSaveConfirmation)}
+                        >
+                          <Save width="16" height="16" />{" "}
+                          <div>Publish Again</div>
+                        </button>
+                      </div> */}
+                      <button
+                        onClick={() => navigate("/")}
+                        className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
+                        type="button"
+                      >
+                        <ArrowLeft width="16" height="16" /> <div>Back</div>
+                      </button>
+
                       <div>
                         <button
-                          onClick={() => navigate("/")}
-                          className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
                           type="button"
+                          className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
+                          onClick={() => saveForm(setShowSaveConfirmation)}
                         >
-                          <ArrowLeft width="16" height="16" /> <div>Back</div>
+                          <Save width="16" height="16" /> <div>Save</div>
                         </button>
                       </div>
+
                       {status === "draft" ? (
                         <>
-                          <div>
-                            <button
-                              type="button"
-                              className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
-                              onClick={() => saveForm(setShowSaveConfirmation)}
-                            >
-                              <Save width="16" height="16" /> <div>Save</div>
-                            </button>
-                          </div>
                           <div>
                             <button
                               onClick={() => openPreviewDrawer()}
