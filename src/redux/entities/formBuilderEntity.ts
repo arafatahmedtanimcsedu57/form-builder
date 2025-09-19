@@ -190,7 +190,7 @@ export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
 
     const isUpdate = Boolean(template?.id);
     const url = isUpdate
-      ? `${apis.BASE}/api/formStructure/${template!.id}`
+      ? `${apis.BASE}/api/formStructure/${template!.formId}`
       : `${apis.BASE}/api/formStructure/`;
 
     try {
