@@ -7,7 +7,7 @@ function currentDateTime(date: string): string {
 function convertToRequest(data: any) {
   const converted = {
     type: convertControlNameReverse(data.controlName),
-    id: data.id,
+    ...(data.id ? { id: data.id } : {}),
     name: data.name,
     required: data.required,
     placeholder: data.placeholder,
@@ -31,7 +31,7 @@ function convertToRequest(data: any) {
 
 function convertContainerToRequest(data: any) {
   const converted = {
-    id: data?.container?.id,
+    ...(data?.container?.id ? { id: data?.container?.id } : {}),
     title: data?.container?.heading,
     type: data?.container?.type,
     skipAble: data?.container?.skipAble,
@@ -44,7 +44,7 @@ function convertContainerToRequest(data: any) {
 
 function convertForm(input: Form) {
   const converted = {
-    id: input.id,
+    id: input.id, //change
     formId: input.formId,
     formName: input.formName,
     file: input.pdf,
@@ -52,7 +52,7 @@ function convertForm(input: Form) {
     creator: "Test User",
     formLayoutComponents: input.blocks.map((block) => ({
       container: {
-        id: block.id,
+        id: block.id, //change
         controlName: "step-container",
         displayText: "Block",
         itemType: "container",
@@ -64,7 +64,7 @@ function convertForm(input: Form) {
         type: block.type,
       },
       children: block.fields.map((field) => ({
-        id: field.id,
+        id: field.id, //change
         controlName: convertControlName(field.type),
         displayText: field.label,
         description: field.information || "",
@@ -80,7 +80,7 @@ function convertForm(input: Form) {
         ...(field.options
           ? {
               items: field.options.map((option) => ({
-                id: option.id,
+                id: option.id, //change
                 value: option.value,
                 label: option.label,
               })),

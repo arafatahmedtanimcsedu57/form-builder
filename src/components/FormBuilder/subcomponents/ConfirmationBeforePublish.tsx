@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import ReactJson from "react-json-view";
 
-import {
-  FileType,
-  FormLayoutComponentsType,
-  TemplateType,
-} from "../../../types/FormTemplateTypes";
+
 
 interface ConfirmationBeforePublishPropsType {
   jsonData: any;
