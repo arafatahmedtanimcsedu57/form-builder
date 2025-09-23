@@ -13,7 +13,7 @@ import convertForm from "../../utils/convertResponseToFormStruct";
 import apis from "../../service/Apis";
 import { SecureGet, SecurePost, SecurePut } from "../../service/axios.call";
 
-import { Form } from "../../types/ResponseFormTypes";
+import { Form, FormPaginationType } from "../../types/ResponseFormTypes";
 import { TemplateType } from "../../types/FormTemplateTypes";
 import { AxiosError } from "axios";
 
@@ -34,14 +34,17 @@ export const getAllTemplates = createAsyncThunk<TemplateType[], string>(
     dispatch(openCircularProgress());
 
     try {
-      const { data }: { data: Form[] } = await SecureGet<Form[]>({
-        url: `${apis.BASE}/api/formStructure/`,
-      });
+      const { data }: { data: FormPaginationType } =
+        await SecureGet<FormPaginationType>({
+          url: `${apis.BASE}/api/formStructure/`,
+        });
       const draftTemplates: TemplateType[] =
         JSON.parse(getFromLocalStorage("templates")) || [];
 
       dispatch(closeCircularProgress());
-      const _data: TemplateType[] = data.map((item: Form) => convertForm(item));
+      const _data: TemplateType[] = data.content.map((item: Form) =>
+        convertForm(item)
+      );
 
       return [...draftTemplates, ..._data];
     } catch (error: any) {
@@ -220,32 +223,6 @@ export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
     }
   }
 );
-
-// export const updateTemplate = createAsyncThunk<any, Partial<Form>>(
-//   "fromBuilderEntity/publishAgainTemplate",
-
-//   async (template: Partial<Form>, { dispatch, rejectWithValue }) => {
-//     dispatch(openCircularProgress());
-
-//     try {
-//       const { data }: { data: any } = await SecurePut<any>({
-//         url: `${apis.BASE}/api/formStructure/${template.formId}`,
-//         data: { ...template },
-//       });
-
-//       dispatch(deleteTemplate(String(template.formId)));
-//       dispatch(closeCircularProgress());
-
-//       return data;
-//     } catch (error: any) {
-//       dispatch(closeCircularProgress());
-
-//       if (error.response && error.response.data.message)
-//         return rejectWithValue(error.response.data.message);
-//       else return rejectWithValue(error.message);
-//     }
-//   }
-// );
 
 export const updateField = createAsyncThunk<
   { fieldId: string; response: any | null },
