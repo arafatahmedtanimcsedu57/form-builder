@@ -3,6 +3,8 @@ import type { FileType } from "./FileType";
 export interface GetAllTemplatesRequest {
   page: number;
   size: number;
+  formName?: string;
+  formId?: string;
 }
 
 export type Option = {

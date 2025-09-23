@@ -38,16 +38,24 @@ export const getAllTemplates = createAsyncThunk<
   "formBuilderEntity/getAllTemplates",
 
   async (
-    { page, size }: GetAllTemplatesRequest,
+    { page, size, formName, formId }: GetAllTemplatesRequest,
     { rejectWithValue, dispatch }
   ) => {
     dispatch(openCircularProgress());
 
     try {
+      const params: any = { page, size };
+      if (formName) {
+        params.formName = formName;
+      }
+      if (formId) {
+        params.formId = formId;
+      }
+
       const { data }: { data: FormPaginationType } =
         await SecureGet<FormPaginationType>({
           url: `${apis.BASE}/api/formStructure/`,
-          params: { page, size },
+          params,
         });
 
       dispatch(closeCircularProgress());

@@ -51,12 +51,16 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
   const [page, setPage] = useState(0); // 0-indexed for API
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [localTemplates, setLocalTemplates] = useState<TemplateType[]>([]);
+  const [searchFormName, setSearchFormName] = useState<string>("");
+  const [searchFormId, setSearchFormId] = useState<string>("");
 
   useEffect(() => {
     if (authToken) {
       const request: GetAllTemplatesRequest = {
         page: page,
         size: rowsPerPage,
+        formName: searchFormName,
+        formId: searchFormId,
       };
       dispatch(getAllTemplates(request));
       dispatch(getAllClients("GET ALL CLIENTS"));
@@ -65,7 +69,18 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
         JSON.parse(getFromLocalStorage("templates")) || [];
       setLocalTemplates(draftTemplates);
     }
-  }, [authToken, page, rowsPerPage]);
+  }, [authToken, page, rowsPerPage, searchFormName, searchFormId]);
+
+  const handleSearch = () => {
+    setPage(0); // Reset to first page on new search
+    const request: GetAllTemplatesRequest = {
+      page: 0,
+      size: rowsPerPage,
+      formName: searchFormName,
+      formId: searchFormId,
+    };
+    dispatch(getAllTemplates(request));
+  };
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -94,6 +109,25 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
               createdFormLayout={false}
               setOpenDialog={setOpenDialog}
             />
+            <div className="d-flex gap-3 align-items-center">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by Form Name"
+                value={searchFormName}
+                onChange={(e) => setSearchFormName(e.target.value)}
+              />
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by Form ID"
+                value={searchFormId}
+                onChange={(e) => setSearchFormId(e.target.value)}
+              />
+              <button className="btn btn-primary" onClick={handleSearch}>
+                Search
+              </button>
+            </div>
 
             {authToken ? (
               <>
@@ -150,54 +184,19 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
                                 scope="row"
                                 align="right"
                               >
-                                {(row as TemplateType).publishStatus ===
-                                "draft" ? (
-                                  <div className="d-flex flex-row-reverse flex-wrap gap-2">
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-warning px-2 fw-medium"
-                                      onClick={() =>
-                                        navigate(
-                                          `/formbuilder/${
-                                            (row as TemplateType).publishStatus
-                                          }-${(row as TemplateType).formId}`
-                                        )
-                                      }
-                                    >
-                                      <Edit width="16" height="16" />
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-danger px-2 fw-medium"
-                                      onClick={() => {
-                                        if (
-                                          confirm(
-                                            "Are you sure you want to delete the template?"
-                                          )
-                                        )
-                                          dispatch(
-                                            deleteTemplate(row?.id as string)
-                                          );
-                                      }}
-                                    >
-                                      <Trash width="16" height="16" />
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="btn btn-sm btn-info px-2 fw-medium"
-                                    onClick={() =>
-                                      navigate(
-                                        `/formbuilder/${
-                                          (row as TemplateType).publishStatus
-                                        }-${(row as TemplateType).formId}`
-                                      )
-                                    }
-                                  >
-                                    <Eye width="16" height="16" />
-                                  </button>
-                                )}
+                                <button
+                                  type="button"
+                                  className="btn btn-sm btn-info px-2 fw-medium"
+                                  onClick={() =>
+                                    navigate(
+                                      `/formbuilder/${
+                                        (row as TemplateType).publishStatus
+                                      }-${(row as TemplateType).formId}`
+                                    )
+                                  }
+                                >
+                                  <Eye width="16" height="16" />
+                                </button>
                               </TableCell>
                             </TableRow>
                           ))
@@ -264,19 +263,37 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
                                 scope="row"
                                 align="right"
                               >
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-info px-2 fw-medium"
-                                  onClick={() =>
-                                    navigate(
-                                      `/formbuilder/${
-                                        (row as TemplateType).publishStatus
-                                      }-${(row as TemplateType).formId}`
-                                    )
-                                  }
-                                >
-                                  <Eye width="16" height="16" />
-                                </button>
+                                <div className="d-flex flex-row-reverse flex-wrap gap-2">
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-warning px-2 fw-medium"
+                                    onClick={() =>
+                                      navigate(
+                                        `/formbuilder/${
+                                          (row as TemplateType).publishStatus
+                                        }-${(row as TemplateType).formId}`
+                                      )
+                                    }
+                                  >
+                                    <Edit width="16" height="16" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-danger px-2 fw-medium"
+                                    onClick={() => {
+                                      if (
+                                        confirm(
+                                          "Are you sure you want to delete the template?"
+                                        )
+                                      )
+                                        dispatch(
+                                          deleteTemplate(row?.id as string)
+                                        );
+                                    }}
+                                  >
+                                    <Trash width="16" height="16" />
+                                  </button>
+                                </div>
                               </TableCell>
                             </TableRow>
                           ))}
