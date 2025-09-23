@@ -287,6 +287,7 @@ const slice = createSlice({
     allTemplates: [] as TemplateType[],
     allTemplatesPagination: null as FormPaginationType | null,
     selectedTemplate: null as TemplateType | null,
+    isLoading: false, // New loading state
   },
   reducers: {
     setSelectedTemplateNull: (state) => {
@@ -294,11 +295,18 @@ const slice = createSlice({
     },
   },
   extraReducers: {
+    [`${getAllTemplates.pending}`]: (state) => {
+      state.isLoading = true;
+    },
     [`${getAllTemplates.fulfilled}`]: (state, { payload }) => {
       state.allTemplates = payload.content.map((item: Form) =>
         convertForm(item)
       );
       state.allTemplatesPagination = payload;
+      state.isLoading = false;
+    },
+    [`${getAllTemplates.rejected}`]: (state) => {
+      state.isLoading = false;
     },
 
     [`${getSingleTemplate.fulfilled}`]: (state, { payload }) => {
