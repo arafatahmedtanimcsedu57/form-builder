@@ -54,7 +54,7 @@ const SaveConfirmation: React.FC<
         onClose={() => setOpenDialog(false)}
       >
         <DialogContent className="modal-content">
-          <ConfirmationBeforePublish jsonData={jsonData} />
+          {/* <ConfirmationBeforePublish jsonData={jsonData} /> */}
 
           <div>
             <p>Want to publish it ?</p>

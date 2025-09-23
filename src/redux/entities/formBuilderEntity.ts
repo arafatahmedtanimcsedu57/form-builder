@@ -13,7 +13,11 @@ import convertForm from "../../utils/convertResponseToFormStruct";
 import apis from "../../service/Apis";
 import { SecureGet, SecurePost, SecurePut } from "../../service/axios.call";
 
-import { Form } from "../../types/ResponseFormTypes";
+import {
+  Form,
+  FormPaginationType,
+  GetAllTemplatesRequest,
+} from "../../types/ResponseFormTypes";
 import { TemplateType } from "../../types/FormTemplateTypes";
 import { AxiosError } from "axios";
 
@@ -27,23 +31,35 @@ interface GetSingleTemplateRequest {
   status: string;
 }
 
-export const getAllTemplates = createAsyncThunk<TemplateType[], string>(
+export const getAllTemplates = createAsyncThunk<
+  FormPaginationType,
+  GetAllTemplatesRequest
+>(
   "formBuilderEntity/getAllTemplates",
 
-  async (data: string, { rejectWithValue, dispatch }) => {
+  async (
+    { page, size, formName, formId }: GetAllTemplatesRequest,
+    { rejectWithValue, dispatch }
+  ) => {
     dispatch(openCircularProgress());
 
     try {
-      const { data }: { data: Form[] } = await SecureGet<Form[]>({
-        url: `${apis.BASE}/api/formStructure/`,
-      });
-      const draftTemplates: TemplateType[] =
-        JSON.parse(getFromLocalStorage("templates")) || [];
+      const params: any = { page, size };
+      if (formName) {
+        params.formName = formName;
+      }
+      if (formId) {
+        params.formId = formId;
+      }
+
+      const { data }: { data: FormPaginationType } =
+        await SecureGet<FormPaginationType>({
+          url: `${apis.BASE}/api/formStructure/`,
+          params,
+        });
 
       dispatch(closeCircularProgress());
-      const _data: TemplateType[] = data.map((item: Form) => convertForm(item));
-
-      return [...draftTemplates, ..._data];
+      return data;
     } catch (error: any) {
       dispatch(closeCircularProgress());
 
@@ -221,32 +237,6 @@ export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
   }
 );
 
-// export const updateTemplate = createAsyncThunk<any, Partial<Form>>(
-//   "fromBuilderEntity/publishAgainTemplate",
-
-//   async (template: Partial<Form>, { dispatch, rejectWithValue }) => {
-//     dispatch(openCircularProgress());
-
-//     try {
-//       const { data }: { data: any } = await SecurePut<any>({
-//         url: `${apis.BASE}/api/formStructure/${template.formId}`,
-//         data: { ...template },
-//       });
-
-//       dispatch(deleteTemplate(String(template.formId)));
-//       dispatch(closeCircularProgress());
-
-//       return data;
-//     } catch (error: any) {
-//       dispatch(closeCircularProgress());
-
-//       if (error.response && error.response.data.message)
-//         return rejectWithValue(error.response.data.message);
-//       else return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
 export const updateField = createAsyncThunk<
   { fieldId: string; response: any | null },
   { fieldId: string; payload: unknown }
@@ -303,7 +293,9 @@ const slice = createSlice({
   name: "formBuilderEntity",
   initialState: {
     allTemplates: [] as TemplateType[],
+    allTemplatesPagination: null as FormPaginationType | null,
     selectedTemplate: null as TemplateType | null,
+    isLoading: false, // New loading state
   },
   reducers: {
     setSelectedTemplateNull: (state) => {
@@ -311,8 +303,18 @@ const slice = createSlice({
     },
   },
   extraReducers: {
+    [`${getAllTemplates.pending}`]: (state) => {
+      state.isLoading = true;
+    },
     [`${getAllTemplates.fulfilled}`]: (state, { payload }) => {
-      state.allTemplates = payload;
+      state.allTemplates = payload.content.map((item: Form) =>
+        convertForm(item)
+      );
+      state.allTemplatesPagination = payload;
+      state.isLoading = false;
+    },
+    [`${getAllTemplates.rejected}`]: (state) => {
+      state.isLoading = false;
     },
 
     [`${getSingleTemplate.fulfilled}`]: (state, { payload }) => {
