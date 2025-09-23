@@ -1,5 +1,10 @@
 import type { FileType } from "./FileType";
 
+export interface GetAllTemplatesRequest {
+  page: number;
+  size: number;
+}
+
 export type Option = {
   id: string;
   value: string;

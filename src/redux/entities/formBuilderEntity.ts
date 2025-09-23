@@ -13,7 +13,11 @@ import convertForm from "../../utils/convertResponseToFormStruct";
 import apis from "../../service/Apis";
 import { SecureGet, SecurePost, SecurePut } from "../../service/axios.call";
 
-import { Form, FormPaginationType } from "../../types/ResponseFormTypes";
+import {
+  Form,
+  FormPaginationType,
+  GetAllTemplatesRequest,
+} from "../../types/ResponseFormTypes";
 import { TemplateType } from "../../types/FormTemplateTypes";
 import { AxiosError } from "axios";
 
@@ -27,26 +31,27 @@ interface GetSingleTemplateRequest {
   status: string;
 }
 
-export const getAllTemplates = createAsyncThunk<TemplateType[], string>(
+export const getAllTemplates = createAsyncThunk<
+  FormPaginationType,
+  GetAllTemplatesRequest
+>(
   "formBuilderEntity/getAllTemplates",
 
-  async (data: string, { rejectWithValue, dispatch }) => {
+  async (
+    { page, size }: GetAllTemplatesRequest,
+    { rejectWithValue, dispatch }
+  ) => {
     dispatch(openCircularProgress());
 
     try {
       const { data }: { data: FormPaginationType } =
         await SecureGet<FormPaginationType>({
           url: `${apis.BASE}/api/formStructure/`,
+          params: { page, size },
         });
-      const draftTemplates: TemplateType[] =
-        JSON.parse(getFromLocalStorage("templates")) || [];
 
       dispatch(closeCircularProgress());
-      const _data: TemplateType[] = data.content.map((item: Form) =>
-        convertForm(item)
-      );
-
-      return [...draftTemplates, ..._data];
+      return data;
     } catch (error: any) {
       dispatch(closeCircularProgress());
 
@@ -280,6 +285,7 @@ const slice = createSlice({
   name: "formBuilderEntity",
   initialState: {
     allTemplates: [] as TemplateType[],
+    allTemplatesPagination: null as FormPaginationType | null,
     selectedTemplate: null as TemplateType | null,
   },
   reducers: {
@@ -289,7 +295,10 @@ const slice = createSlice({
   },
   extraReducers: {
     [`${getAllTemplates.fulfilled}`]: (state, { payload }) => {
-      state.allTemplates = payload;
+      state.allTemplates = payload.content.map((item: Form) =>
+        convertForm(item)
+      );
+      state.allTemplatesPagination = payload;
     },
 
     [`${getSingleTemplate.fulfilled}`]: (state, { payload }) => {

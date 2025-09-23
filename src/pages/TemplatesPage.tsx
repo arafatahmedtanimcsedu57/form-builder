@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useEffect, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getAllTemplates } from "../redux/entities/formBuilderEntity";
+import { getFromLocalStorage } from "../redux/common";
 
 import NewFormDialogComponent from "../components/FormTemplates/NewFormDialogComponent";
 import FormLayoutComponent from "../components/FormTemplates/FormLayoutComponent";
@@ -13,9 +14,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 import { getAllClients } from "../redux/entities/clientsEntity";
 import { TemplateType } from "../types/FormTemplateTypes";
+import { GetAllTemplatesRequest } from "../types/ResponseFormTypes";
 import Eye from "../assets/svg/Eye";
 import { useNavigate } from "react-router-dom";
 
@@ -23,8 +27,11 @@ interface TemplatesPageProps {}
 
 const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
   const dispatch = useAppDispatch();
-  const templates = useAppSelector(
+  const serverTemplates = useAppSelector(
     (state) => state.entities.formBuilder.allTemplates
+  );
+  const allTemplatesPagination = useAppSelector(
+    (state) => state.entities.formBuilder.allTemplatesPagination
   );
   const clients = useAppSelector((state) => state.entities.client.allClients);
 
@@ -33,13 +40,31 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
   const navigate = useNavigate();
 
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [page, setPage] = useState(0); // 0-indexed for API
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [localTemplates, setLocalTemplates] = useState<TemplateType[]>([]);
 
   useEffect(() => {
     if (authToken) {
-      dispatch(getAllTemplates("GET ALL TEMPLATE"));
+      const request: GetAllTemplatesRequest = {
+        page: page,
+        size: rowsPerPage,
+      };
+      dispatch(getAllTemplates(request));
       dispatch(getAllClients("GET ALL CLIENTS"));
+
+      const draftTemplates: TemplateType[] =
+        JSON.parse(getFromLocalStorage("templates")) || [];
+      setLocalTemplates(draftTemplates);
     }
-  }, [authToken]);
+  }, [authToken, page, rowsPerPage]);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value - 1); // Convert to 0-indexed for API
+  };
 
   return (
     <div className="container-fluid">
@@ -84,8 +109,8 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {templates.length ? (
-                        templates.map((row) => (
+                      {serverTemplates.length ? (
+                        serverTemplates.map((row) => (
                           <TableRow
                             key={row.id}
                             sx={{
@@ -122,6 +147,83 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {allTemplatesPagination &&
+                  allTemplatesPagination.totalPages > 1 && (
+                    <Stack spacing={2} sx={{ alignItems: "center", mt: 2 }}>
+                      <Pagination
+                        count={allTemplatesPagination.totalPages}
+                        page={page + 1} // 1-indexed for UI
+                        onChange={handleChangePage}
+                        color="primary"
+                      />
+                    </Stack>
+                  )}
+
+                {localTemplates.length > 0 && (
+                  <>
+                    <div className="w-100 text-center mt-5">
+                      <h3 className="text-info-emphasis fw-bolder">
+                        Local Draft Templates
+                      </h3>
+                    </div>
+                    <TableContainer component={Paper}>
+                      <Table
+                        sx={{ minWidth: 650 }}
+                        aria-label="local templates table"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Form Name</TableCell>
+                            <TableCell align="right">Form ID</TableCell>
+                            <TableCell align="right"></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {localTemplates.map((row) => (
+                            <TableRow
+                              key={row.id}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {row.formName}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="right"
+                              >
+                                {row.formId}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="right"
+                              >
+                                <button
+                                  type="button"
+                                  className="btn btn-sm btn-info px-2 fw-medium"
+                                  onClick={() =>
+                                    navigate(
+                                      `/formbuilder/${
+                                        (row as TemplateType).publishStatus
+                                      }-${(row as TemplateType).formId}`
+                                    )
+                                  }
+                                >
+                                  <Eye width="16" height="16" />
+                                </button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </>
+                )}
               </>
             ) : (
               <></>
