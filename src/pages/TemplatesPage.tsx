@@ -59,8 +59,6 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
       const request: GetAllTemplatesRequest = {
         page: page,
         size: rowsPerPage,
-        formName: searchFormName,
-        formId: searchFormId,
       };
       dispatch(getAllTemplates(request));
       dispatch(getAllClients("GET ALL CLIENTS"));
@@ -69,7 +67,7 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
         JSON.parse(getFromLocalStorage("templates")) || [];
       setLocalTemplates(draftTemplates);
     }
-  }, [authToken, page, rowsPerPage, searchFormName, searchFormId]);
+  }, [authToken, page, rowsPerPage]);
 
   const handleSearch = () => {
     setPage(0); // Reset to first page on new search
@@ -109,25 +107,6 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
               createdFormLayout={false}
               setOpenDialog={setOpenDialog}
             />
-            <div className="d-flex gap-3 align-items-center">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by Form Name"
-                value={searchFormName}
-                onChange={(e) => setSearchFormName(e.target.value)}
-              />
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by Form ID"
-                value={searchFormId}
-                onChange={(e) => setSearchFormId(e.target.value)}
-              />
-              <button className="btn btn-primary" onClick={handleSearch}>
-                Search
-              </button>
-            </div>
 
             {authToken ? (
               <>
@@ -144,68 +123,92 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
                 {isLoading ? (
                   <div className="w-100 text-center">
                     <p className="text-info-emphasis fw-bolder">
-                      Data is cooking...
+                      Forms are loading...
                     </p>
                   </div>
                 ) : (
-                  <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Form Name</TableCell>
-                          <TableCell align="right">Form ID</TableCell>
-                          <TableCell align="right"></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {serverTemplates.length ? (
-                          serverTemplates.map((row) => (
-                            <TableRow
-                              key={row.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell component="th" scope="row">
-                                {row.formName}
-                              </TableCell>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                align="right"
+                  <>
+                    <div className="d-flex gap-3 align-items-center">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search by Form Name"
+                        value={searchFormName}
+                        onChange={(e) => setSearchFormName(e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search by Form ID"
+                        value={searchFormId}
+                        onChange={(e) => setSearchFormId(e.target.value)}
+                      />
+                      <button
+                        className="btn btn-primary"
+                        onClick={handleSearch}
+                      >
+                        Search
+                      </button>
+                    </div>
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Form Name</TableCell>
+                            <TableCell align="right">Form ID</TableCell>
+                            <TableCell align="right"></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {serverTemplates.length ? (
+                            serverTemplates.map((row) => (
+                              <TableRow
+                                key={row.id}
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                }}
                               >
-                                {row.formId}
-                              </TableCell>
-
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                align="right"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-info px-2 fw-medium"
-                                  onClick={() =>
-                                    navigate(
-                                      `/formbuilder/${
-                                        (row as TemplateType).publishStatus
-                                      }-${(row as TemplateType).formId}`
-                                    )
-                                  }
+                                <TableCell component="th" scope="row">
+                                  {row.formName}
+                                </TableCell>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  align="right"
                                 >
-                                  <Eye width="16" height="16" />
-                                </button>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <></>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                                  {row.formId}
+                                </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  align="right"
+                                >
+                                  <button
+                                    type="button"
+                                    className="btn btn-sm btn-info px-2 fw-medium"
+                                    onClick={() =>
+                                      navigate(
+                                        `/formbuilder/${
+                                          (row as TemplateType).publishStatus
+                                        }-${(row as TemplateType).formId}`
+                                      )
+                                    }
+                                  >
+                                    <Eye width="16" height="16" />
+                                  </button>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <></>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </>
                 )}
                 {allTemplatesPagination &&
                   allTemplatesPagination.totalPages > 1 && (
