@@ -13,6 +13,7 @@ import {
   TemplateType,
 } from "../../types/FormTemplateTypes";
 import type { FileType } from "../../types/FileType";
+import useModalStrip from "../../global-hooks/useModalStrip";
 
 interface SaveConfirmationDialogComponentProps {
   openDialog: boolean;
@@ -26,9 +27,8 @@ const SaveConfirmation: React.FC<
   PropsWithChildren<SaveConfirmationDialogComponentProps>
 > = ({ openDialog, setOpenDialog, formLayoutComponents, template, file }) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
-  console.log(template, "Template");
+  const { showModalStrip } = useModalStrip();
 
   const jsonData = {
     ...(template?.id ? { id: template?.id } : {}),
@@ -41,33 +41,19 @@ const SaveConfirmation: React.FC<
   const handleFormSubmit = async () => {
     await dispatch(publishTemplate(jsonData));
 
+    showModalStrip("success", "Form is published", 5000);
     setOpenDialog(false);
-    navigate("/");
   };
 
   return (
     <>
-      <Dialog
-        open={openDialog}
-        fullWidth
-        maxWidth="lg"
-        onClose={() => setOpenDialog(false)}
+      <button
+        type="submit"
+        className="btn btn-sm btn-primary px-4 fw-medium"
+        onClick={() => handleFormSubmit()}
       >
-        <DialogContent className="modal-content">
-          {/* <ConfirmationBeforePublish jsonData={jsonData} /> */}
-
-          <div>
-            <p>Want to publish it ?</p>
-            <button
-              type="submit"
-              className="btn btn-sm btn-primary px-4 fw-medium"
-              onClick={() => handleFormSubmit()}
-            >
-              Publish
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        Publish
+      </button>
     </>
   );
 };

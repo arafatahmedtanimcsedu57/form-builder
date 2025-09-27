@@ -181,13 +181,13 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                       </button>
 
                       <div>
-                        <button
-                          type="button"
-                          className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
-                          onClick={() => saveForm(setShowSaveConfirmation)}
-                        >
-                          <Save width="16" height="16" /> <div>Save</div>
-                        </button>
+                        <SaveConfirmation
+                          template={template}
+                          formLayoutComponents={formLayoutComponents}
+                          openDialog={showSaveConfirmation}
+                          setOpenDialog={setShowSaveConfirmation}
+                          file={file}
+                        />
                       </div>
 
                       {status === "draft" ? (
@@ -281,14 +281,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
           </div>
         </>
       )}
-
-      <SaveConfirmation
-        template={template}
-        formLayoutComponents={formLayoutComponents}
-        openDialog={showSaveConfirmation}
-        setOpenDialog={setShowSaveConfirmation}
-        file={file}
-      />
     </>
   );
 };

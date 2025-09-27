@@ -13,6 +13,7 @@ import {
   addTemplate,
   getAllTemplates,
   hasAlready,
+  publishTemplate,
 } from "../../redux/entities/formBuilderEntity";
 import { getToken, setToken } from "../../redux/auth/token";
 import { getLogin } from "../../redux/auth/login";
@@ -89,9 +90,14 @@ const NewFormDialogComponent: FunctionComponent<
       }
 
       const template: TemplateType = await dispatch(
-        addTemplate(newFormData)
+        publishTemplate(newFormData)
       ).unwrap();
-      navigate(`/formbuilder/${template.publishStatus}-${template.formId}`);
+
+      console.log;
+
+      navigate(
+        `/formbuilder/${template.publishStatus || "saved"}-${template.formId}`
+      );
     } catch (ex: any) {
       setCreatingForm(false);
 
