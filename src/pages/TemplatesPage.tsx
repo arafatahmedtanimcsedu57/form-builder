@@ -106,16 +106,6 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
 
             {authToken ? (
               <>
-                <div className="w-100 text-center">
-                  <h6 className="text-primary">Single or multi-page forms</h6>
-                  <h3 className="text-info-emphasis fw-bolder">
-                    Discover our beautiful templates
-                  </h3>
-                  <div className="text-muted">
-                    Our collection of beautiful templates to create your own
-                    forms!
-                  </div>
-                </div>
                 {isLoading ? (
                   <div className="w-100 text-center">
                     <p className="text-info-emphasis fw-bolder">
