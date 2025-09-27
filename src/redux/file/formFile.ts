@@ -86,7 +86,11 @@ const initialState: FileUploadType = {
 const slice = createSlice({
   name: "formFile",
   initialState,
-  reducers: {},
+  reducers: {
+    setFileNull: (state) => {
+      state.file = null;
+    },
+  },
   extraReducers: {
     [`${saveFormFile.pending}`]: (state) => {
       state.loading = true;
@@ -113,4 +117,5 @@ const slice = createSlice({
   },
 });
 
+export const { setFileNull } = slice.actions;
 export default slice.reducer;

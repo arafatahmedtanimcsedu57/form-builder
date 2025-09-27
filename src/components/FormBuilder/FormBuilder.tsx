@@ -23,15 +23,8 @@ import { FileType } from "../../types/FileType";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
 import ArrowLeft from "../../assets/svg/ArrowLeft";
-import Save from "../../assets/svg/Save";
 import Eye from "../../assets/svg/Eye";
-import {
-  Divider,
-  IconButton,
-  InputBase,
-  Paper,
-  TextField,
-} from "@mui/material";
+import { Divider, IconButton, InputBase, Paper } from "@mui/material";
 
 let isMobile: boolean;
 if (process.env.NODE_ENV === "localhost") {
@@ -53,7 +46,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 }) => {
   const {
     handleItemAdded,
-    saveForm,
     deleteContainer,
     deleteControl,
     editContainerProperties,
@@ -63,7 +55,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     selectControl,
     saveFormName,
     setCurrentFormName,
-    // updateForm,
     selectedTemplate,
     formLayoutComponents,
     selectedControl,
@@ -105,17 +96,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   <div className="d-flex flex-wrap justify-content-between gap-2">
                     {editFormName ? (
                       <div>
-                        {/* <TextField
-													type="text"
-													fullWidth={true}
-													placeholder="Enter a name"
-													variant="outlined"
-													size="small"
-													value={currentFormName}
-													onChange={(e) => setCurrentFormName(e.target.value)}
-													className="w-100"
-												/> */}
-
                         <Paper
                           component="form"
                           sx={{
@@ -162,16 +142,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                       </h5>
                     )}
                     <div className="d-flex gap-2 flex-wrap">
-                      {/* <div>
-                        <button
-                          type="button"
-                          className="btn btn-sm bg-success fw-medium d-flex gap-2 align-items-center px-4 text-light"
-                          onClick={() => updateForm(setShowSaveConfirmation)}
-                        >
-                          <Save width="16" height="16" />{" "}
-                          <div>Publish Again</div>
-                        </button>
-                      </div> */}
                       <button
                         onClick={() => navigate("/")}
                         className="btn btn-sm btn-outline-primary d-flex gap-2 justify-content-between align-items-center px-4 fw-medium"
