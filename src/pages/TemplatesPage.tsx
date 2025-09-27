@@ -102,11 +102,7 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
           </div>
           <div className="d-flex flex-wrap gap-5">
             {/* Create New */}
-            <FormLayoutComponent
-              template={null}
-              createdFormLayout={false}
-              setOpenDialog={setOpenDialog}
-            />
+            <FormLayoutComponent setOpenDialog={setOpenDialog} />
 
             {authToken ? (
               <>
