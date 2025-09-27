@@ -1,4 +1,6 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getToken, setToken } from "../../redux/auth/token";
 
 interface FormLayoutComponentProps {
   setOpenDialog?: (arg: boolean) => void;
@@ -7,6 +9,13 @@ interface FormLayoutComponentProps {
 const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
   setOpenDialog,
 }) => {
+  const dispatch = useAppDispatch();
+  const authToken = useAppSelector((state) => state.user.access.token);
+
+  useEffect(() => {
+    if (!authToken) dispatch(getToken("GET AUTH TOKEN"));
+  }, []);
+
   return (
     <>
       <div>
@@ -17,7 +26,7 @@ const ActionSection: React.FC<PropsWithChildren<FormLayoutComponentProps>> = ({
           }}
           className="btn btn-primary shadow px-5 fw-medium mb-3"
         >
-          Let's Create
+          {authToken ? `Let's Create` : `Log In`}
         </button>
       </div>
     </>
