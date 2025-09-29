@@ -141,4 +141,4 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
   );
 };
 
-export default React.memo(LeftSidebar);
+export default LeftSidebar;

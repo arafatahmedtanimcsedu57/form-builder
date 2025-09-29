@@ -405,22 +405,22 @@ const EditPropertiesComponent: FC<
 
                   {/* For Field */}
                   <div className="d-flex flex-row-reverse flex-wrap gap-2">
-                    {selectedControl.id ? (
-                      <button
-                        type="submit"
-                        className="btn btn-sm btn-warning px-4 fw-medium"
-                        id="field-update"
-                        key="field-update"
-                      >
-                        Update Data
-                      </button>
-                    ) : (
+                    {/* {selectedControl.id ? ( */}
+                    <button
+                      type="submit"
+                      className="btn btn-sm btn-warning px-4 fw-medium"
+                      id="field-update"
+                      key="field-update"
+                    >
+                      Update Data
+                    </button>
+                    {/* ) : (
                       <SaveConfirmation
                         template={template}
                         formLayoutComponents={formLayoutComponents}
                         file={file}
                       />
-                    )}
+                    )} */}
                     <button
                       type="button"
                       id="field-cancel"

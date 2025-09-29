@@ -3,6 +3,7 @@ import moment from "moment";
 
 import { useAppDispatch } from "../../../redux/hooks";
 import {
+  publishTemplate,
   saveTemplate,
   updateContainer,
   updateField,
@@ -26,6 +27,7 @@ import {
   convertContainerToRequest,
   convertToRequest,
 } from "../../../utils/convertResponseToFormStruct";
+import { convert } from "../../../utils/convert";
 
 interface useFormBuilderProps {
   template: TemplateType;
@@ -170,6 +172,33 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     });
     newState[formContainerId] = formContainer;
     setFormLayoutComponents(newState);
+
+    if (status === "saved" && !item.id) {
+      // if (selectedTemplate) {
+      //   console.log({
+      //     ...selectedTemplate,
+      //     formLayoutComponents: newState,
+      //   });
+      // }
+
+      const jsonData = {
+        ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
+        formId: selectedTemplate?.formId,
+        formName: selectedTemplate?.formName,
+        // pdf: file,
+        blocks: [...convert(newState).blocks],
+      };
+
+      await dispatch(publishTemplate(jsonData));
+
+      setSelectedTemplate((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          formLayoutComponents: newState,
+        };
+      });
+    }
   };
 
   const editContainerProperties = async (
@@ -205,6 +234,33 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     newState[formContainerId] = formContainer;
 
     setFormLayoutComponents(newState);
+
+    if (status === "saved" && !item.id) {
+      // if (selectedTemplate) {
+      //   console.log({
+      //     ...selectedTemplate,
+      //     formLayoutComponents: newState,
+      //   });
+      // }
+
+      const jsonData = {
+        ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
+        formId: selectedTemplate?.formId,
+        formName: selectedTemplate?.formName,
+        // pdf: file,
+        blocks: [...convert(newState).blocks],
+      };
+
+      await dispatch(publishTemplate(jsonData));
+
+      setSelectedTemplate((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          formLayoutComponents: newState,
+        };
+      });
+    }
   };
 
   const moveControlFromSide = (

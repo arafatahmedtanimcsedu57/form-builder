@@ -41,6 +41,7 @@ const SaveConfirmation: React.FC<
 
     showModalStrip("success", "Form is published", 5000);
 
+    window.location.reload();
     // reload here
   };
 
