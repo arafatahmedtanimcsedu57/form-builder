@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getToken, setToken } from "../../redux/auth/token";
+import { getToken } from "../../redux/auth/token";
 
 interface FormLayoutComponentProps {
   setOpenDialog?: (arg: boolean) => void;
