@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useCallback } from "react";
 
 import ControlDragComponent from "./subcomponents/ControlDragComponent";
 import {
@@ -32,6 +32,12 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
   const dispatch = useAppDispatch();
 
   const [currentFile, setCurrentFile] = useState<{ file: any }>({ file: "" });
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true);
+
+  const memoizedFile = React.useMemo(() => file, [file]);
+  console.log(file, "ARAFAT");
+  const [, updateState] = useState({});
+  const forceUpdate = useCallback(() => updateState({}), []);
 
   const handleChange = (event: any) => {
     setCurrentFile({ file: event.target.files[0] });
@@ -40,10 +46,20 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
   const handleUpload = () => {
     let data = new FormData();
     data.append("file", currentFile.file);
-    dispatch(saveFormFile(data));
+    dispatch(saveFormFile(data))
+      .then((result) => {
+        console.log("saveFormFile success:", result);
+        forceUpdate();
+      })
+      .catch((error) => {
+        console.error("saveFormFile error:", error);
+      });
   };
 
-  const removeFile = (file: FileType) => dispatch(resetFormFile(file));
+  const removeFile = (file: FileType) => {
+    dispatch(resetFormFile(file));
+    setIsDialogOpen(true);
+  };
 
   return (
     <>
@@ -78,49 +94,50 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
             })}
           </div>
         </div>
-
         <div className="container p-4">
-          {file && file.fileName ? (
+          {/* {memoizedFile ? (
             <div className="alert alert-info d-flex gap-2 flex-column">
               <div>
                 <span className="text-info-emphasis me-4 fs-7">
-                  {file.fileName.split("/").slice(-1)[0]}
+                  {memoizedFile?.data?.fileName.split("/").slice(-1)[0]}
                 </span>
               </div>
               <div>
                 <button
-                  onClick={() => removeFile(file)}
+                  onClick={() => removeFile(memoizedFile)}
                   className="btn btn-sm btn-outline-danger px-4"
                 >
                   Remove
                 </button>
               </div>
             </div>
-          ) : (
-            <Dialog open={true} fullWidth maxWidth="sm">
-              <DialogContent className="modal-content">
-                <>
-                  {" "}
-                  <input
-                    className="form-control btn border mb-3"
-                    type="file"
-                    onChange={handleChange}
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-primary fw-medium px-4"
-                    onClick={() => handleUpload()}
-                  >
-                    Upload
-                  </button>
-                </>
-              </DialogContent>
-            </Dialog>
-          )}
+          ) : ( */}
+          {/* <Dialog open={isDialogOpen} fullWidth maxWidth="sm">
+              <DialogContent className="modal-content"> */}
+          <>
+            <input
+              className="form-control btn border mb-3"
+              type="file"
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="btn btn-sm btn-primary fw-medium px-4"
+              onClick={() => {
+                handleUpload();
+                setIsDialogOpen(false);
+              }}
+            >
+              Upload
+            </button>
+          </>
+          {/* </DialogContent>
+            </Dialog> */}
+          {/* )} */}
         </div>
       </div>
     </>
   );
 };
 
-export default LeftSidebar;
+export default React.memo(LeftSidebar);
