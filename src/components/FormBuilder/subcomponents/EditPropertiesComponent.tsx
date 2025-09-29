@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useEffect, useState } from "react";
-import _ from "lodash";
+import _, { toUpper } from "lodash";
 
 import {
   Checkbox,
@@ -314,6 +314,14 @@ const EditPropertiesComponent: FC<
                   </div>
 
                   <div className="mb-3">
+                    {childUpdatedItem?.controlName
+                      ?.toUpperCase()
+                      ?.includes("UPLOAD") ? (
+                      <>Select</>
+                    ) : (
+                      <></>
+                    )}
+
                     <TextField
                       id="field-name"
                       key="field-name"
