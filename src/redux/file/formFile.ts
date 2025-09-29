@@ -27,7 +27,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
 
     try {
       const { data } = await SecurePost<FileType>({
-        url: `${apis.BASE}/api/v1/multimedia/upload-file`,
+        url: `${apis.BASE}/api/v1/multimedia/upload`,
         data: file,
         headers: {
           "content-type": "multipart/form-data",

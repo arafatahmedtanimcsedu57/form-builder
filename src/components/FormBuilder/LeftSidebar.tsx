@@ -97,25 +97,25 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
               </div>
             </div>
           ) : (
-            // <Dialog open={true} fullWidth maxWidth="sm">
-            //   <DialogContent className="modal-content">
-            <>
-              {" "}
-              <input
-                className="form-control btn border mb-3"
-                type="file"
-                onChange={handleChange}
-              />
-              <button
-                type="button"
-                className="btn btn-sm btn-primary fw-medium px-4"
-                onClick={() => handleUpload()}
-              >
-                Upload
-              </button>
-            </>
-            //   </DialogContent>
-            // </Dialog>
+            <Dialog open={true} fullWidth maxWidth="sm">
+              <DialogContent className="modal-content">
+                <>
+                  {" "}
+                  <input
+                    className="form-control btn border mb-3"
+                    type="file"
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary fw-medium px-4"
+                    onClick={() => handleUpload()}
+                  >
+                    Upload
+                  </button>
+                </>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       </div>
