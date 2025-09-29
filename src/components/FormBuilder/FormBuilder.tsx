@@ -154,8 +154,6 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                         <SaveConfirmation
                           template={template}
                           formLayoutComponents={formLayoutComponents}
-                          openDialog={showSaveConfirmation}
-                          setOpenDialog={setShowSaveConfirmation}
                           file={file}
                         />
                       </div>
@@ -228,6 +226,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   editContainerProperties={editContainerProperties}
                   editControlProperties={editControlProperties}
                   status={status || ""}
+                  template={template}
+                  file={file}
                 />
               </div>
             </div>

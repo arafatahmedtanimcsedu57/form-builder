@@ -11,6 +11,7 @@ import {
   FormLayoutComponentChildrenType,
   FormLayoutComponentContainerType,
   FormLayoutComponentsType,
+  TemplateType,
 } from "../../types/FormTemplateTypes";
 import { FileType } from "../../types/FileType";
 import { Dialog, DialogContent } from "@mui/material";

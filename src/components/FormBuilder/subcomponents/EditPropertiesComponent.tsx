@@ -17,12 +17,15 @@ import {
   FormLayoutComponentChildrenItemsType,
   FormLayoutComponentChildrenType,
   FormLayoutComponentContainerType,
+  TemplateType,
 } from "../../../types/FormTemplateTypes";
 import {
   FormControlNames,
   FormItemTypes,
 } from "../../../utils/formBuilderUtils";
 import { FormLayoutComponentsType } from "../../../types/FormTemplateTypes";
+import { FileType } from "../../../types/FileType";
+import SaveConfirmation from "../SaveConfirmation";
 
 interface EditPropertiesComponentProps {
   selectedControl?:
@@ -50,6 +53,8 @@ interface EditPropertiesComponentProps {
     moveControlObj: FormLayoutComponentChildrenType
   ) => void;
   status: string;
+  template: TemplateType;
+  file: FileType | null;
 }
 
 const EditPropertiesComponent: FC<
@@ -62,6 +67,8 @@ const EditPropertiesComponent: FC<
     editContainerProperties,
     formLayoutComponents,
     status,
+    template,
+    file,
   } = props;
 
   const [updatedItem, setUpdatedItem] = useState<
@@ -398,14 +405,22 @@ const EditPropertiesComponent: FC<
 
                   {/* For Field */}
                   <div className="d-flex flex-row-reverse flex-wrap gap-2">
-                    <button
-                      type="submit"
-                      className="btn btn-sm btn-warning px-4 fw-medium"
-                      id="field-update"
-                      key="field-update"
-                    >
-                      Update Data
-                    </button>
+                    {selectedControl.id ? (
+                      <button
+                        type="submit"
+                        className="btn btn-sm btn-warning px-4 fw-medium"
+                        id="field-update"
+                        key="field-update"
+                      >
+                        Update Data
+                      </button>
+                    ) : (
+                      <SaveConfirmation
+                        template={template}
+                        formLayoutComponents={formLayoutComponents}
+                        file={file}
+                      />
+                    )}
                     <button
                       type="button"
                       id="field-cancel"

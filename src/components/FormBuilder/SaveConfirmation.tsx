@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Dialog, DialogContent } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import ConfirmationBeforePublish from "./subcomponents/ConfirmationBeforePublish";
 
 import { useAppDispatch } from "../../redux/hooks";
@@ -16,8 +16,6 @@ import type { FileType } from "../../types/FileType";
 import useModalStrip from "../../global-hooks/useModalStrip";
 
 interface SaveConfirmationDialogComponentProps {
-  openDialog: boolean;
-  setOpenDialog: (arg: boolean) => void;
   formLayoutComponents: FormLayoutComponentsType[];
   template: TemplateType;
   file: FileType | null;
@@ -25,7 +23,7 @@ interface SaveConfirmationDialogComponentProps {
 
 const SaveConfirmation: React.FC<
   PropsWithChildren<SaveConfirmationDialogComponentProps>
-> = ({ openDialog, setOpenDialog, formLayoutComponents, template, file }) => {
+> = ({ formLayoutComponents, template, file }) => {
   const dispatch = useAppDispatch();
 
   const { showModalStrip } = useModalStrip();
@@ -42,7 +40,8 @@ const SaveConfirmation: React.FC<
     await dispatch(publishTemplate(jsonData));
 
     showModalStrip("success", "Form is published", 5000);
-    setOpenDialog(false);
+
+    // reload here
   };
 
   return (
