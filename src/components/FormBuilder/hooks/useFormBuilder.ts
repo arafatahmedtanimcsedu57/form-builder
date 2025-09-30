@@ -66,7 +66,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         children: [],
       });
 
-      console.log(newState);
       setFormLayoutComponents(newState);
     } else if (item.itemType === FormItemTypes.CONTROL) {
       const newState = formLayoutComponents.slice();
@@ -90,7 +89,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       formContainer.children = newChildren;
       newState[formContainerId] = formContainer;
 
-      console.log(newState);
       setFormLayoutComponents(newState);
     }
   };
@@ -141,10 +139,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     status: string,
     item: FormLayoutComponentChildrenType
   ) => {
-    console.log(item, ">>>");
     if (status === "saved" && item.id) {
       const convertedData = convertToRequest(item);
-      console.log("convertedData", convertedData);
 
       if (!convertedData.id) {
         showModalStrip("danger", "Update Block First", 5000);

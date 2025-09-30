@@ -36,7 +36,6 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true);
 
   const memoizedFile = React.useMemo(() => file, [file]);
-  console.log(file, "ARAFAT");
   const [, updateState] = useState({});
   const forceUpdate = useCallback(() => updateState({}), []);
 
@@ -96,11 +95,11 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
           </div>
         </div>
         <div className="container p-4">
-          {/* {memoizedFile ? (
+          {memoizedFile ? (
             <div className="alert alert-info d-flex gap-2 flex-column">
               <div>
                 <span className="text-info-emphasis me-4 fs-7">
-                  {memoizedFile?.data?.fileName.split("/").slice(-1)[0]}
+                  {memoizedFile?.fileName.split("/").slice(-1)[0]}
                 </span>
               </div>
               <div>
@@ -112,29 +111,29 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
                 </button>
               </div>
             </div>
-          ) : ( */}
-          {/* <Dialog open={isDialogOpen} fullWidth maxWidth="sm">
-              <DialogContent className="modal-content"> */}
-          <>
-            <input
-              className="form-control btn border mb-3"
-              type="file"
-              onChange={handleChange}
-            />
-            <button
-              type="button"
-              className="btn btn-sm btn-primary fw-medium px-4"
-              onClick={() => {
-                handleUpload();
-                setIsDialogOpen(false);
-              }}
-            >
-              Upload
-            </button>
-          </>
-          {/* </DialogContent>
-            </Dialog> */}
-          {/* )} */}
+          ) : (
+            <Dialog open={isDialogOpen} fullWidth maxWidth="sm">
+              <DialogContent className="modal-content">
+                <>
+                  <input
+                    className="form-control btn border mb-3"
+                    type="file"
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary fw-medium px-4"
+                    onClick={() => {
+                      handleUpload();
+                      setIsDialogOpen(false);
+                    }}
+                  >
+                    Upload
+                  </button>
+                </>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
     </>

@@ -26,7 +26,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
     dispatch(openCircularProgress());
 
     try {
-      const { data } = await SecurePost<FileType>({
+      const { data } = await SecurePost<{ data: FileType }>({
         url: `${apis.BASE}/api/v1/multimedia/upload`,
         data: file,
         headers: {
@@ -35,7 +35,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
       });
 
       dispatch(closeCircularProgress());
-      return data as FileType;
+      return data?.data || ({} as FileType);
     } catch (error: any) {
       dispatch(closeCircularProgress());
 

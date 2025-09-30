@@ -84,7 +84,6 @@ const NewFormDialogComponent: FunctionComponent<
       };
       const { payload }: { payload: any } = await dispatch(hasAlready(request));
 
-      console.log(payload);
       if (payload.numberOfElements > 0) {
         throw new Error("Form ID already exists");
       }
@@ -92,8 +91,6 @@ const NewFormDialogComponent: FunctionComponent<
       const template: TemplateType = await dispatch(
         publishTemplate(newFormData)
       ).unwrap();
-
-      console.log;
 
       navigate(
         `/formbuilder/${template.publishStatus || "saved"}-${template.formId}`
