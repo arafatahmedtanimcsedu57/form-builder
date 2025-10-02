@@ -23,7 +23,7 @@ interface DropContainerComponentProps {
   index?: number;
   handleItemAdded?: (
     item: FormLayoutComponentChildrenType | FormLayoutComponentContainerType,
-    containerId?: string,
+    containerId?: string
   ) => void;
   layout?: FormLayoutComponentChildrenType | FormLayoutComponentContainerType;
   selectedControl?:
@@ -37,13 +37,13 @@ interface DropContainerComponentProps {
     layout:
       | FormLayoutComponentChildrenType
       | FormLayoutComponentContainerType
-      | undefined,
+      | undefined
   ) => void;
   moveControl?: (
     item: FormLayoutComponentChildrenType,
     dragIndex: number,
     hoverIndex: number,
-    containerId: string,
+    containerId: string
   ) => void;
 }
 
@@ -83,16 +83,16 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
   if (
     selectedControl &&
     selectedControl.itemType === layout?.itemType &&
-    selectedControl.id === layout.id
+    selectedControl.internalId === layout.internalId
   ) {
     borderColor = "rgb(255, 193, 7)";
     border = borderBase + " " + borderColor;
   }
 
   const handleDeleteContainer: React.MouseEventHandler<HTMLSpanElement> = (
-    event,
+    event
   ) => {
-    if (deleteContainer) deleteContainer(layout?.id as string);
+    if (deleteContainer) deleteContainer(layout?.internalId as string);
     if (event.stopPropagation) event.stopPropagation();
   };
 
@@ -168,7 +168,7 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
                     {childrenComponents?.map((component, ind) => {
                       return (
                         <ControlViewComponent
-                          key={component.id}
+                          key={component.internalId}
                           item={component}
                           deleteControl={(controlId, containerId) =>
                             deleteControl
@@ -179,20 +179,20 @@ const DropContainerComponent: React.FC<DropContainerComponentProps> = ({
                             selectControl ? selectControl(layout) : null
                           }
                           selectedControl={selectedControl}
-                          containerId={layout?.id as string}
+                          containerId={layout?.internalId as string}
                           index={ind}
                           moveControl={(
                             item,
                             dragIndex,
                             hoverIndex,
-                            containerId,
+                            containerId
                           ) => {
                             moveControl
                               ? moveControl(
                                   item,
                                   dragIndex,
                                   hoverIndex,
-                                  containerId,
+                                  containerId
                                 )
                               : null;
                           }}

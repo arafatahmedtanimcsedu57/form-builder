@@ -1,5 +1,11 @@
-import React, { FC, PropsWithChildren, useEffect, useState } from "react";
-import _ from "lodash";
+import React, {
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import _, { toUpper } from "lodash";
 
 import {
   Checkbox,
@@ -17,12 +23,15 @@ import {
   FormLayoutComponentChildrenItemsType,
   FormLayoutComponentChildrenType,
   FormLayoutComponentContainerType,
+  TemplateType,
 } from "../../../types/FormTemplateTypes";
 import {
   FormControlNames,
   FormItemTypes,
 } from "../../../utils/formBuilderUtils";
 import { FormLayoutComponentsType } from "../../../types/FormTemplateTypes";
+import { FileType } from "../../../types/FileType";
+import SaveConfirmation from "../SaveConfirmation";
 
 interface EditPropertiesComponentProps {
   selectedControl?:
@@ -41,7 +50,6 @@ interface EditPropertiesComponentProps {
   ) => void;
   editContainerProperties: (
     status: string,
-
     updatedItem: FormLayoutComponentContainerType
   ) => void;
   formLayoutComponents: FormLayoutComponentsType[];
@@ -50,7 +58,19 @@ interface EditPropertiesComponentProps {
     moveControlObj: FormLayoutComponentChildrenType
   ) => void;
   status: string;
+  template: TemplateType;
+  file: FileType | null;
 }
+
+const IMAGE_KEYS = [
+  "ANY_IMAGE",
+  "DRIVER_LICENSE_FRONT",
+  "DRIVER_LICENSE_BACK",
+  "INSURANCE_PRIMARY_FRONT",
+  "INSURANCE_PRIMARY_BACK",
+  "INSURANCE_SECONDARY_FRONT",
+  "INSURANCE_SECONDARY_BACK",
+] as const;
 
 const EditPropertiesComponent: FC<
   PropsWithChildren<EditPropertiesComponentProps>
@@ -62,6 +82,8 @@ const EditPropertiesComponent: FC<
     editContainerProperties,
     formLayoutComponents,
     status,
+    template,
+    file,
   } = props;
 
   const [updatedItem, setUpdatedItem] = useState<
@@ -78,6 +100,17 @@ const EditPropertiesComponent: FC<
   const [controlsInContainer, setControlsInContainer] = useState<
     number | undefined
   >(undefined);
+
+  // NEW: state for upload name building
+  const [imageKey, setImageKey] = useState<string>("");
+  const [nameSuffix, setNameSuffix] = useState<string>("");
+
+  const combinedName = useMemo(() => {
+    if (!imageKey && !nameSuffix) return "";
+    if (!imageKey) return nameSuffix || "";
+    if (!nameSuffix) return imageKey;
+    return `${imageKey}_${nameSuffix}`;
+  }, [imageKey, nameSuffix]);
 
   useEffect(() => {
     if (selectedControl) {
@@ -98,6 +131,26 @@ const EditPropertiesComponent: FC<
           (selectedControl as FormLayoutComponentChildrenType).required
         );
       }
+
+      // Initialize imageKey + nameSuffix for upload controls
+      const sc = selectedControl as FormLayoutComponentChildrenType;
+      const isUpload = sc?.controlName?.toUpperCase()?.includes("UPLOAD");
+      if (isUpload) {
+        const raw = sc?.name ?? "";
+        const maybeKey = IMAGE_KEYS.find((k) => raw?.startsWith(k));
+        if (maybeKey) {
+          const rest = raw.slice(maybeKey.length);
+          const cleaned = rest.startsWith("_") ? rest.slice(1) : rest;
+          setImageKey(maybeKey);
+          setNameSuffix(cleaned);
+        } else {
+          setImageKey("");
+          setNameSuffix(raw || "");
+        }
+      } else {
+        setImageKey("");
+        setNameSuffix("");
+      }
     }
     setMoveControlObj(null);
     setControlsInContainer(undefined);
@@ -107,7 +160,6 @@ const EditPropertiesComponent: FC<
     HTMLInputElement | HTMLTextAreaElement
   > = (e) => {
     const { name, value } = e.target;
-    console.log("name, value", name, value);
     setUpdatedItem((prevState) => ({
       ...prevState,
       [name]: value,
@@ -151,7 +203,7 @@ const EditPropertiesComponent: FC<
   };
 
   const handleCheckChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     const key = e.currentTarget.checked;
     if (name === "required") {
       setIsUpdatedItemRequired(key);
@@ -162,13 +214,44 @@ const EditPropertiesComponent: FC<
     }));
   };
 
+  // NEW: keep updatedItem.name synced when upload fields change
+  const handleImageKeyChange = (val: string) => {
+    setImageKey(val);
+    setUpdatedItem((prev) => ({
+      ...prev,
+      name:
+        val || nameSuffix
+          ? `${val}${val && nameSuffix ? "_" : ""}${nameSuffix}`
+          : "",
+    }));
+  };
+
+  const handleNameSuffixChange: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    const suffix = e.target.value || "";
+    setNameSuffix(suffix);
+    setUpdatedItem((prev) => ({
+      ...prev,
+      name:
+        imageKey || suffix
+          ? `${imageKey}${imageKey && suffix ? "_" : ""}${suffix}`
+          : "",
+    }));
+  };
+
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
-    editControlProperties(
-      status,
-      updatedItem as FormLayoutComponentChildrenType
-    );
+    // Enforce combined 'name' for upload controls
+    const sc = childUpdatedItem;
+    const isUpload = sc?.controlName?.toUpperCase()?.includes("UPLOAD");
+    const finalName = isUpload ? combinedName : sc?.name;
+
+    editControlProperties(status, {
+      ...sc,
+      name: finalName,
+    } as FormLayoutComponentChildrenType);
   };
 
   const onContainerFormSubmit: React.FormEventHandler<HTMLFormElement> = (
@@ -307,16 +390,69 @@ const EditPropertiesComponent: FC<
                   </div>
 
                   <div className="mb-3">
-                    <TextField
-                      id="field-name"
-                      key="field-name"
-                      size="small"
-                      label="Internal Name"
-                      name="name"
-                      value={childUpdatedItem.name}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
+                    {childUpdatedItem?.controlName
+                      ?.toUpperCase()
+                      ?.includes("UPLOAD") ? (
+                      <>
+                        <div className="d-flex gap-2 align-items-start">
+                          <FormControl fullWidth key="upload-image-key">
+                            <InputLabel
+                              size="small"
+                              id="upload-image-key-label"
+                            >
+                              Image Key
+                            </InputLabel>
+                            <Select
+                              size="small"
+                              labelId="upload-image-key-label"
+                              id="upload-image-key"
+                              label="Image Key"
+                              value={imageKey}
+                              onChange={(e) =>
+                                handleImageKeyChange(e.target.value as string)
+                              }
+                            >
+                              {IMAGE_KEYS.map((k) => (
+                                <MenuItem key={k} value={k}>
+                                  {k}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <TextField
+                            size="small"
+                            id="upload-name-suffix"
+                            label="Internal Name"
+                            value={nameSuffix}
+                            onChange={handleNameSuffixChange}
+                          />
+                        </div>
+
+                        <div className="mt-2">
+                          <TextField
+                            size="small"
+                            id="field-name"
+                            label=""
+                            value={combinedName}
+                            InputProps={{ readOnly: true }}
+                            className="form-control"
+                            disabled
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <TextField
+                        id="field-name"
+                        key="field-name"
+                        size="small"
+                        label="Internal Name"
+                        name="name"
+                        value={childUpdatedItem.name}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    )}
                   </div>
 
                   <div className="mb-3">
@@ -396,7 +532,6 @@ const EditPropertiesComponent: FC<
                   <hr />
                   <div className="mt-5"></div>
 
-                  {/* For Field */}
                   <div className="d-flex flex-row-reverse flex-wrap gap-2">
                     <button
                       type="submit"
@@ -406,6 +541,7 @@ const EditPropertiesComponent: FC<
                     >
                       Update Data
                     </button>
+
                     <button
                       type="button"
                       id="field-cancel"

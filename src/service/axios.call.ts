@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { getFromLocalStorage } from "../redux/common";
+import { getFromLocalStorage, removeFromLocalStorage } from "../redux/common";
 
 import apis from "./Apis";
 
@@ -8,12 +8,18 @@ const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(
   (config) => config,
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error),
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      removeFromLocalStorage("fb-auth-token");
+      window.location.href = "/"; // Redirect to login page
+    }
+    return Promise.reject(error);
+  }
 );
 
 const addTokenToHeaders = () => {
@@ -40,7 +46,7 @@ export const Post = <T>(p: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
 };
 
 export const Put = <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosRequestConfig<T>> => {
   return axiosInstance({
     baseURL: apis.BASE,
@@ -50,7 +56,7 @@ export const Put = <T>(
 };
 
 export const SecureGet = async <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   try {
     return await axiosInstance({
@@ -69,7 +75,7 @@ export const SecureGet = async <T>(
 };
 
 export const SecurePost = async <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   try {
     return await axiosInstance({
@@ -89,7 +95,7 @@ export const SecurePost = async <T>(
 };
 
 export const SecurePut = async <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   try {
     return await axiosInstance({
@@ -109,7 +115,7 @@ export const SecurePut = async <T>(
 };
 
 export const SecureUpload = async <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   try {
     return await axiosInstance({
@@ -130,7 +136,7 @@ export const SecureUpload = async <T>(
 };
 
 export const SecureDelete = async <T>(
-  p: AxiosRequestConfig,
+  p: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   try {
     return await axiosInstance({

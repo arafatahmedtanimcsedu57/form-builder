@@ -27,6 +27,7 @@ import Eye from "../assets/svg/Eye";
 import { useNavigate } from "react-router-dom";
 import Trash from "../assets/svg/Trash";
 import Edit from "../assets/svg/Edit";
+import { CircularProgress, LinearProgress } from "@mui/material";
 
 interface TemplatesPageProps {}
 
@@ -102,29 +103,27 @@ const TemplatesPage: React.FC<PropsWithChildren<TemplatesPageProps>> = ({}) => {
           </div>
           <div className="d-flex flex-wrap gap-5">
             {/* Create New */}
-            <FormLayoutComponent
-              template={null}
-              createdFormLayout={false}
-              setOpenDialog={setOpenDialog}
-            />
+            <FormLayoutComponent setOpenDialog={setOpenDialog} />
 
             {authToken ? (
               <>
-                <div className="w-100 text-center">
-                  <h6 className="text-primary">Single or multi-page forms</h6>
-                  <h3 className="text-info-emphasis fw-bolder">
-                    Discover our beautiful templates
-                  </h3>
-                  <div className="text-muted">
-                    Our collection of beautiful templates to create your own
-                    forms!
-                  </div>
-                </div>
                 {isLoading ? (
                   <div className="w-100 text-center">
-                    <p className="text-info-emphasis fw-bolder">
+                    {/* <p className="text-info-emphasis fw-bolder">
                       Forms are loading...
-                    </p>
+                    </p> */}
+                    <CircularProgress
+                      variant="determinate"
+                      sx={{
+                        color: (theme) =>
+                          theme.palette.grey[
+                            theme.palette.mode === "light" ? 200 : 800
+                          ],
+                      }}
+                      size={40}
+                      thickness={4}
+                      value={100}
+                    />
                   </div>
                 ) : (
                   <>

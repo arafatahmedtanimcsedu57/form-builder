@@ -53,6 +53,7 @@ function convertForm(input: Form) {
     formLayoutComponents: input.blocks.map((block) => ({
       container: {
         id: block.id, //change
+        internalId: block.id,
         controlName: "step-container",
         displayText: "Block",
         itemType: "container",
@@ -65,6 +66,7 @@ function convertForm(input: Form) {
       },
       children: block.fields.map((field) => ({
         id: field.id, //change
+        internalId: field.id,
         controlName: convertControlName(field.type),
         displayText: field.label,
         description: field.information || "",

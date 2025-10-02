@@ -26,8 +26,8 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
     dispatch(openCircularProgress());
 
     try {
-      const { data } = await SecurePost<FileType>({
-        url: `${apis.BASE}/api/v1/multimedia/upload-file`,
+      const { data } = await SecurePost<{ data: FileType }>({
+        url: `${apis.BASE}/api/v1/multimedia/upload`,
         data: file,
         headers: {
           "content-type": "multipart/form-data",
@@ -35,7 +35,7 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
       });
 
       dispatch(closeCircularProgress());
-      return data as FileType;
+      return data?.data || ({} as FileType);
     } catch (error: any) {
       dispatch(closeCircularProgress());
 
@@ -86,7 +86,11 @@ const initialState: FileUploadType = {
 const slice = createSlice({
   name: "formFile",
   initialState,
-  reducers: {},
+  reducers: {
+    setFileNull: (state) => {
+      state.file = null;
+    },
+  },
   extraReducers: {
     [`${saveFormFile.pending}`]: (state) => {
       state.loading = true;
@@ -113,4 +117,5 @@ const slice = createSlice({
   },
 });
 
+export const { setFileNull } = slice.actions;
 export default slice.reducer;

@@ -70,6 +70,45 @@ export const getAllTemplates = createAsyncThunk<
   }
 );
 
+export const hasAlready = createAsyncThunk<
+  FormPaginationType,
+  GetAllTemplatesRequest
+>(
+  "formBuilderEntity/hasAlready",
+
+  async (
+    { page, size, formName, formId }: GetAllTemplatesRequest,
+    { rejectWithValue, dispatch }
+  ) => {
+    dispatch(openCircularProgress());
+
+    try {
+      const params: any = { page, size };
+      if (formName) {
+        params.formName = formName;
+      }
+      if (formId) {
+        params.formId = formId;
+      }
+
+      const { data }: { data: FormPaginationType } =
+        await SecureGet<FormPaginationType>({
+          url: `${apis.BASE}/api/formStructure/`,
+          params,
+        });
+
+      dispatch(closeCircularProgress());
+      return data;
+    } catch (error: any) {
+      dispatch(closeCircularProgress());
+
+      if (error.response && error.response.data.message)
+        return rejectWithValue(error.response.data.message);
+      else return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getSingleTemplate = createAsyncThunk<
   TemplateType,
   GetSingleTemplateRequest

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { Dialog, DialogContent } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import ConfirmationBeforePublish from "./subcomponents/ConfirmationBeforePublish";
 
 import { useAppDispatch } from "../../redux/hooks";
@@ -13,10 +13,9 @@ import {
   TemplateType,
 } from "../../types/FormTemplateTypes";
 import type { FileType } from "../../types/FileType";
+import useModalStrip from "../../global-hooks/useModalStrip";
 
 interface SaveConfirmationDialogComponentProps {
-  openDialog: boolean;
-  setOpenDialog: (arg: boolean) => void;
   formLayoutComponents: FormLayoutComponentsType[];
   template: TemplateType;
   file: FileType | null;
@@ -24,11 +23,10 @@ interface SaveConfirmationDialogComponentProps {
 
 const SaveConfirmation: React.FC<
   PropsWithChildren<SaveConfirmationDialogComponentProps>
-> = ({ openDialog, setOpenDialog, formLayoutComponents, template, file }) => {
+> = ({ formLayoutComponents, template, file }) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
-  console.log(template, "Template");
+  const { showModalStrip } = useModalStrip();
 
   const jsonData = {
     ...(template?.id ? { id: template?.id } : {}),
@@ -41,33 +39,21 @@ const SaveConfirmation: React.FC<
   const handleFormSubmit = async () => {
     await dispatch(publishTemplate(jsonData));
 
-    setOpenDialog(false);
-    navigate("/");
+    showModalStrip("success", "Form is published", 5000);
+
+    window.location.reload();
+    // reload here
   };
 
   return (
     <>
-      <Dialog
-        open={openDialog}
-        fullWidth
-        maxWidth="lg"
-        onClose={() => setOpenDialog(false)}
+      <button
+        type="submit"
+        className="btn btn-sm btn-primary px-4 fw-medium"
+        onClick={() => handleFormSubmit()}
       >
-        <DialogContent className="modal-content">
-          {/* <ConfirmationBeforePublish jsonData={jsonData} /> */}
-
-          <div>
-            <p>Want to publish it ?</p>
-            <button
-              type="submit"
-              className="btn btn-sm btn-primary px-4 fw-medium"
-              onClick={() => handleFormSubmit()}
-            >
-              Publish
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        Publish
+      </button>
     </>
   );
 };
