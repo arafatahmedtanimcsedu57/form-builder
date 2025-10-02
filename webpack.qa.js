@@ -11,7 +11,7 @@ module.exports = merge(common, {
 	devtool: 'inline-source-map',
 	mode: 'development',
 	output: {
-		path: path.join(__dirname, 'public/dist'),
+		path: path.join(__dirname, 'build'),
 		filename: `bundle-${version}.js`,
 		publicPath: '/',
 	},
