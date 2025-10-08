@@ -33,10 +33,11 @@ const FormBuilderPage: React.FC<
 > = ({}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const template = useAppSelector(
-    (state) => state.entities.formBuilder.selectedTemplate
+  const { selectedTemplate: template, isLoading: templateLoading } =
+    useAppSelector((state) => state.entities.formBuilder);
+  const { file, loading: fileLoading } = useAppSelector(
+    (state) => state.file.file
   );
-  const file = useAppSelector((state) => state.file.file.file);
 
   const { formId } = useParams();
   const formIdSeg = formId ? formId.split("-") : [];
@@ -79,6 +80,8 @@ const FormBuilderPage: React.FC<
           template={template ? template : defaultForm}
           file={file}
           status={_status}
+          fileLoading={fileLoading}
+          templateLoading={templateLoading}
         />
       ) : (
         <></>

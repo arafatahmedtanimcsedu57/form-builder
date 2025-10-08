@@ -10,7 +10,7 @@ function useModalStrip() {
   const showModalStrip = async (
     modalType: string,
     message: string,
-    time: number,
+    time: number
   ) => {
     if (timeInterval) clearTimeout(timeInterval);
     dispatch(openModal({ modalType, message }));
@@ -18,7 +18,7 @@ function useModalStrip() {
     setTimeInterval(
       setTimeout(() => {
         dispatch(closeModal());
-      }, time),
+      }, time)
     );
   };
 

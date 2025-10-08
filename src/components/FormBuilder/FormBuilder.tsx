@@ -37,13 +37,18 @@ interface FormBuilderProps {
   template: TemplateType;
   file: FileType | null;
   status: string | null;
+  fileLoading: boolean;
+  templateLoading: boolean;
 }
 
 const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
   template,
   file,
   status,
+  fileLoading,
+  templateLoading,
 }) => {
+  const [isComponentReady, setIsComponentReady] = useState(false);
   const {
     handleItemAdded,
     deleteContainer,
@@ -70,6 +75,20 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
   const { showPreview, openPreviewDrawer, closePreviewDrawer } =
     useFormPreview();
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setIsComponentReady(true), 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  if (!isComponentReady) {
+    return (
+      <div className="d-flex justify-content-center align-items-center h-100">
+        Loading Form Builder...
+      </div>
+    );
+  }
+
   return (
     <>
       {!isMobile ? (
@@ -84,11 +103,14 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   maxWidth: "300px",
                 }}
               >
-                <LeftSidebar
-                  handleItemAdded={handleItemAdded}
-                  formLayoutComponents={formLayoutComponents}
-                  file={file} //form structure
-                />
+                {fileLoading || templateLoading ? null : (
+                  <LeftSidebar
+                    handleItemAdded={handleItemAdded}
+                    formLayoutComponents={formLayoutComponents}
+                    file={file} //form structure
+                    fileLoading={fileLoading} //form structure loading state
+                  />
+                )}
               </div>
 
               <div className="d-flex flex-column flex-fill h-100 py-4">

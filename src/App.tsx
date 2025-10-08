@@ -5,6 +5,7 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import BackdropCircularProgressComponent from "./components/BackdropCircularProgressComponent";
 import ModalStrip from "./components/ModalStrip";
+import { createPortal } from "react-dom";
 
 function App() {
   const router = createBrowserRouter(routes);
@@ -13,7 +14,7 @@ function App() {
     <>
       <Provider store={store}>
         <BackdropCircularProgressComponent />
-        <ModalStrip />
+        {createPortal(<ModalStrip />, document.body)}
         <RouterProvider router={router} />
       </Provider>
     </>

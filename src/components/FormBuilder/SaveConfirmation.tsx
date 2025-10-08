@@ -52,7 +52,7 @@ const SaveConfirmation: React.FC<
         className="btn btn-sm btn-primary px-4 fw-medium"
         onClick={() => handleFormSubmit()}
       >
-        Publish
+        Save
       </button>
     </>
   );

@@ -23,12 +23,14 @@ interface LeftSidebarProps {
   ) => void;
   formLayoutComponents: FormLayoutComponentsType[];
   file: FileType | null;
+  fileLoading: boolean;
 }
 
 const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
   handleItemAdded,
   formLayoutComponents,
   file,
+  fileLoading,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -111,6 +113,8 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
                 </button>
               </div>
             </div>
+          ) : fileLoading ? (
+            <></>
           ) : (
             <Dialog open={isDialogOpen} fullWidth maxWidth="sm">
               <DialogContent className="modal-content">

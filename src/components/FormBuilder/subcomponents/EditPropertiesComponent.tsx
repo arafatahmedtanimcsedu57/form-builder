@@ -356,7 +356,7 @@ const EditPropertiesComponent: FC<
                       type="submit"
                       className="btn btn-sm btn-warning px-4 fw-medium"
                     >
-                      Update Data
+                      Save
                     </button>
                     <button
                       key="cancle-block"
@@ -429,7 +429,7 @@ const EditPropertiesComponent: FC<
                           />
                         </div>
 
-                        <div className="mt-2">
+                        {/* <div className="mt-2">
                           <TextField
                             size="small"
                             id="field-name"
@@ -439,7 +439,7 @@ const EditPropertiesComponent: FC<
                             className="form-control"
                             disabled
                           />
-                        </div>
+                        </div> */}
                       </>
                     ) : (
                       <TextField
@@ -539,7 +539,7 @@ const EditPropertiesComponent: FC<
                       id="field-update"
                       key="field-update"
                     >
-                      Update Data
+                      Save
                     </button>
 
                     <button

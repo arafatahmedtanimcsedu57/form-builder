@@ -5,7 +5,7 @@ interface ModalStripProps {}
 
 const ModalStrip: React.FC<ModalStripProps> = ({}) => {
   const { modalType, message } = useAppSelector(
-    (state) => state.uielements.modalstrip,
+    (state) => state.uielements.modalstrip
   );
 
   return (
@@ -26,6 +26,7 @@ const ModalStrip: React.FC<ModalStripProps> = ({}) => {
           position: "fixed",
           width: "48%",
           display: "inline-block",
+          zIndex: 2147483647,
         }}
       >
         <div className="container">
