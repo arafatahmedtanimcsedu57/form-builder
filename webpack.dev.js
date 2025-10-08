@@ -31,7 +31,7 @@ module.exports = merge(common, {
       minify: false,
     }),
     new Dotenv({
-      path: "./.env.localhost",
+      path: "./.env.dev",
       safe: true,
       allowEmptyValues: true,
     }), //in order for environment variable to work

@@ -1,6 +1,6 @@
 {
 	"name": "frontend",
-	"version": "0.1.39",
+	"version": "0.4.0",
 	"private": true,
 	"dependencies": {
 		"@emotion/react": "^11.11.0",
@@ -35,8 +35,9 @@
 	},
 	"scripts": {
 		"start": "cross-env webpack-dev-server --config webpack.dev.js --open",
+		"start:qa": "cross-env webpack-dev-server --config webpack.qa.js --open",
 		"start:prod": "cross-env webpack --config webpack.prod.js",
-		"build": "npm version patch && cross-env webpack-dev-server --config webpack.dev.js",
+		"build": "cross-env webpack-dev-server --config webpack.dev.js",
 		"build:qa": "cross-env webpack --config webpack.qa.js",
 		"build:staging": "cross-env webpack --config webpack.staging.js",
 		"build:prod": "cross-env webpack --config webpack.prod.js"
