@@ -24,6 +24,7 @@ import {
   FormPaginationType,
   GetAllTemplatesRequest,
 } from "../../types/ResponseFormTypes";
+import { saveFormFile } from "../../redux/file/formFile";
 
 interface NewFormDialogComponentProps {
   openDialog: boolean;
@@ -71,6 +72,7 @@ const NewFormDialogComponent: FunctionComponent<
     const newFormData = {
       formName: e.currentTarget.formName.value,
       formId: e.currentTarget.formId.value,
+      pdf: file,
     };
 
     setCreatingForm(true);
@@ -105,6 +107,25 @@ const NewFormDialogComponent: FunctionComponent<
       );
     }
   };
+
+  const { file, loading: fileLoading } = useAppSelector(
+    (state) => state.file.file
+  );
+
+  const handleUpload = (event: any) => {
+    const currentFile = event.target.files[0];
+    let data = new FormData();
+    data.append("file", currentFile);
+    dispatch(saveFormFile(data))
+      .then((result) => {
+        console.log("saveFormFile success:", result);
+      })
+      .catch((error) => {
+        console.error("saveFormFile error:", error);
+      });
+  };
+
+  console.log("file in dialog:", file, fileLoading);
 
   useEffect(() => {
     if (!authToken) dispatch(getToken("GET AUTH TOKEN"));
@@ -203,10 +224,19 @@ const NewFormDialogComponent: FunctionComponent<
                     />
                   </div>
 
+                  <div>
+                    <input
+                      className="form-control btn border mb-3"
+                      type="file"
+                      onChange={handleUpload}
+                      disabled={fileLoading}
+                    />
+                  </div>
+
                   <button
                     type="submit"
                     className="btn btn-sm btn-success fw-medium px-4"
-                    disabled={creatingForm}
+                    disabled={creatingForm || fileLoading}
                   >
                     {creatingForm ? (
                       <>

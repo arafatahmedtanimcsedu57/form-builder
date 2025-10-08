@@ -24,7 +24,13 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 
 import ArrowLeft from "../../assets/svg/ArrowLeft";
 import Eye from "../../assets/svg/Eye";
-import { Divider, IconButton, InputBase, Paper } from "@mui/material";
+import {
+  CircularProgress,
+  Divider,
+  IconButton,
+  InputBase,
+  Paper,
+} from "@mui/material";
 
 let isMobile: boolean;
 if (process.env.NODE_ENV === "localhost") {
@@ -76,14 +82,16 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     useFormPreview();
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => setIsComponentReady(true), 1000);
+    const timeoutId = window.setTimeout(() => setIsComponentReady(true), 2000);
 
     return () => window.clearTimeout(timeoutId);
   }, []);
 
   if (!isComponentReady) {
     return (
-      <div className="d-flex justify-content-center align-items-center h-100"></div>
+      <div className="w-100 h-100  d-flex justify-content-center align-items-center text-center">
+        <CircularProgress color="inherit" />
+      </div>
     );
   }
 
