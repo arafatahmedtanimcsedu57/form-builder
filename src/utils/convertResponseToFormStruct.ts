@@ -50,7 +50,12 @@ function convertForm(input: Form) {
     file: input.pdf,
     createdAt: currentDateTime(input.creationDate),
     creator: "Test User",
-    formLayoutComponents: input.blocks.map((block) => ({
+    formLayoutComponents: [...(input.blocks || [])]
+      .sort(
+        (blockA, blockB) =>
+          (blockA?.sequence ?? 0) - (blockB?.sequence ?? 0),
+      )
+      .map((block) => ({
       container: {
         id: block.id, //change
         internalId: block.id,

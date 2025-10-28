@@ -216,6 +216,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       subHeading: item.subHeading,
       skipAble: item.skipAble,
       type: item.type,
+      sequence: Number(item.sequence),
     };
 
     if (status === "saved" && formContainer.container.id) {
@@ -229,6 +230,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       await dispatch(
         updateContainer({ fieldId: convertedData.id, payload: convertedData })
       ).unwrap();
+
+      window.location.reload();
     }
 
     newState[formContainerId] = formContainer;

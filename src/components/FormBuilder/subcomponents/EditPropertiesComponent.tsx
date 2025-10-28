@@ -303,6 +303,19 @@ const EditPropertiesComponent: FC<
                   </div>
 
                   <div className="mb-3">
+                    <TextField
+                      id="field-Sequence"
+                      key="field-Sequence"
+                      label="Field Sequence"
+                      name="sequence"
+                      value={containerUpdatedItem.sequence}
+                      onChange={handleChange}
+                      className="form-control"
+                      size="small"
+                    />
+                  </div>
+
+                  <div className="mb-3">
                     <FormControlLabel
                       key="skipable-confirmation"
                       id="skipable-confirmation"
@@ -322,7 +335,7 @@ const EditPropertiesComponent: FC<
                           name="skipAble"
                         />
                       }
-                      label="Cointainer is skip able?"
+                      label="Container is skip able?"
                     />
                   </div>
 
