@@ -64,7 +64,12 @@ function convertForm(input: Form) {
         skipAble: block.skipAble,
         type: block.type,
       },
-      children: block.fields.map((field) => ({
+      children: [...(block.fields || [])]
+        .sort(
+          (fieldA, fieldB) =>
+            (fieldA?.sequence ?? 0) - (fieldB?.sequence ?? 0),
+        )
+        .map((field) => ({
         id: field.id, //change
         internalId: field.id,
         controlName: convertControlName(field.type),
@@ -96,6 +101,7 @@ function convertForm(input: Form) {
     updatedAt: currentDateTime(input.modificationDate),
   };
 
+  console.log(input, converted, "ARAAFATAAAAAAAAAAAAAAAAAAAAAaa");
   return converted;
 }
 

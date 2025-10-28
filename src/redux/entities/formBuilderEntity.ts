@@ -130,6 +130,7 @@ export const getSingleTemplate = createAsyncThunk<
         dispatch(closeCircularProgress());
 
         const _data: TemplateType = convertForm(data);
+        console.log(_data, ">>>>>>>>>>>>>>>>>>>>>>>");
         return _data;
       } catch (error: any) {
         dispatch(closeCircularProgress());
@@ -241,6 +242,7 @@ export const saveTemplate = createAsyncThunk(
 export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
   "fromBuilderEntity/publishTemplate",
   async (template, { dispatch, rejectWithValue }) => {
+    console.log("I am saving..............");
     dispatch(openCircularProgress());
 
     const isUpdate = Boolean(template?.id);

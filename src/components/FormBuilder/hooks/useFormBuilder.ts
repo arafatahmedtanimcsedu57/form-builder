@@ -150,6 +150,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       await dispatch(
         updateField({ fieldId: convertedData.id, payload: convertedData })
       ).unwrap();
+
+      window.location.reload();
     }
 
     const newState = formLayoutComponents.slice();
@@ -194,6 +196,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
           formLayoutComponents: newState,
         };
       });
+
+      window.location.reload();
     }
   };
 
@@ -256,6 +260,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
           formLayoutComponents: newState,
         };
       });
+
+      window.location.reload();
     }
   };
 
