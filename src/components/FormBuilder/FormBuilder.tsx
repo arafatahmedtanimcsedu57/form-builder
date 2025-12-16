@@ -61,6 +61,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     deleteControl,
     editContainerProperties,
     editControlProperties,
+    updateControlLocally,
+    updateContainerLocally,
     moveControl,
     moveControlFromSide,
     selectControl,
@@ -255,6 +257,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   moveControlFromSide={moveControlFromSide}
                   editContainerProperties={editContainerProperties}
                   editControlProperties={editControlProperties}
+                  updateControlLocally={updateControlLocally}
+                  updateContainerLocally={updateContainerLocally}
                   populateSignatureFields={populateSignatureFields}
                   clearContainerFields={clearContainerFields}
                   status={status || ""}
