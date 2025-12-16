@@ -66,6 +66,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     selectControl,
     saveFormName,
     setCurrentFormName,
+    populateSignatureFields,
+    clearContainerFields,
     selectedTemplate,
     formLayoutComponents,
     selectedControl,
@@ -253,6 +255,8 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
                   moveControlFromSide={moveControlFromSide}
                   editContainerProperties={editContainerProperties}
                   editControlProperties={editControlProperties}
+                  populateSignatureFields={populateSignatureFields}
+                  clearContainerFields={clearContainerFields}
                   status={status || ""}
                   template={template}
                   file={file}

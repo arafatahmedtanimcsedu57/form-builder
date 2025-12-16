@@ -11,6 +11,7 @@ import {
 } from "../../../redux/entities/formBuilderEntity";
 
 import {
+  FormControlNames,
   FormItemTypes,
   FormPublishStatus,
 } from "../../../utils/formBuilderUtils";
@@ -268,6 +269,107 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     }
   };
 
+  const clearContainerFields = (containerInternalId: string) => {
+    setFormLayoutComponents((prevState) => {
+      const newState = prevState.slice();
+      const containerIndex = newState.findIndex(
+        (f) => f.container.internalId === containerInternalId
+      );
+
+      if (containerIndex !== -1) {
+        const formContainer = { ...newState[containerIndex] };
+        formContainer.children = [];
+        newState[containerIndex] = formContainer;
+      }
+
+      return newState;
+    });
+  };
+
+  const populateSignatureFields = (containerInternalId: string) => {
+    const signatureFields: FormLayoutComponentChildrenType[] = [
+      {
+        id: "",
+        internalId: generateID(),
+        controlName: FormControlNames.INPUTTEXTFIELD,
+        displayText: "Text Field",
+        description: "Enter your full legal name",
+        labelName: "Full Name",
+        itemType: FormItemTypes.CONTROL,
+        icon: "fas fa-text-height",
+        required: true,
+        category: "text-elements",
+        containerId: containerInternalId,
+        placeholder: "Enter your full name",
+        name: "full_name",
+        sequence: 1,
+      },
+      {
+        id: "",
+        internalId: generateID(),
+        controlName: FormControlNames.DATEFIELD,
+        displayText: "Date Picker",
+        description: "Select your date of birth",
+        labelName: "Date of Birth",
+        itemType: FormItemTypes.CONTROL,
+        icon: "bi bi-calendar",
+        required: true,
+        category: "date-elements",
+        containerId: containerInternalId,
+        placeholder: "Select date of birth",
+        name: "date_of_birth",
+        sequence: 2,
+      },
+      {
+        id: "",
+        internalId: generateID(),
+        controlName: FormControlNames.SIGNATURE,
+        displayText: "Signature",
+        description: "Please sign here",
+        labelName: "Signature",
+        itemType: FormItemTypes.CONTROL,
+        icon: "fa fa-signature",
+        required: true,
+        category: "other-elements",
+        containerId: containerInternalId,
+        placeholder: "Sign here",
+        name: "signature",
+        sequence: 3,
+      },
+      {
+        id: "",
+        internalId: generateID(),
+        controlName: FormControlNames.DATEFIELD,
+        displayText: "Date Picker",
+        description: "Date when signature was provided",
+        labelName: "Date of Signature",
+        itemType: FormItemTypes.CONTROL,
+        icon: "bi bi-calendar",
+        required: true,
+        category: "date-elements",
+        containerId: containerInternalId,
+        placeholder: "Select signature date",
+        name: "date_of_signature",
+        sequence: 4,
+      },
+    ];
+
+    setFormLayoutComponents((prevState) => {
+      const newState = prevState.slice();
+      const containerIndex = newState.findIndex(
+        (f) => f.container.internalId === containerInternalId
+      );
+
+      if (containerIndex !== -1) {
+        const formContainer = { ...newState[containerIndex] };
+        formContainer.children = signatureFields;
+        newState[containerIndex] = formContainer;
+      }
+
+      return newState;
+    });
+  };
+
   const moveControlFromSide = (
     item: FormLayoutComponentChildrenType,
     { containerId, position }: FormLayoutComponentChildrenType
@@ -417,6 +519,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     // updateForm,
     setCurrentFormName,
     saveFormName,
+    populateSignatureFields,
+    clearContainerFields,
     selectedTemplate,
     formLayoutComponents,
     selectedControl,

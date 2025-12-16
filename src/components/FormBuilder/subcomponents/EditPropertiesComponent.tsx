@@ -57,6 +57,8 @@ interface EditPropertiesComponentProps {
     selectedControl: FormLayoutComponentChildrenType,
     moveControlObj: FormLayoutComponentChildrenType
   ) => void;
+  populateSignatureFields: (containerInternalId: string) => void;
+  clearContainerFields: (containerInternalId: string) => void;
   status: string;
   template: TemplateType;
   file: FileType | null;
@@ -81,6 +83,8 @@ const EditPropertiesComponent: FC<
     editControlProperties,
     editContainerProperties,
     formLayoutComponents,
+    populateSignatureFields,
+    clearContainerFields,
     status,
     template,
     file,
@@ -350,7 +354,16 @@ const EditPropertiesComponent: FC<
                         value={containerUpdatedItem.type}
                         label="Select Type"
                         name="type"
-                        onChange={(e: any) => handleChange(e)}
+                        onChange={(e: any) => {
+                          handleChange(e);
+                          if (containerUpdatedItem.internalId) {
+                            if (e.target.value === "SIGNATURE") {
+                              populateSignatureFields(containerUpdatedItem.internalId);
+                            } else if (e.target.value === "INPUT") {
+                              clearContainerFields(containerUpdatedItem.internalId);
+                            }
+                          }
+                        }}
                         size="small"
                       >
                         <MenuItem key="input" value={"INPUT"}>
