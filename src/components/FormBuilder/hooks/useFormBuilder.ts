@@ -152,7 +152,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         updateField({ fieldId: convertedData.id, payload: convertedData })
       ).unwrap();
 
-      window.location.reload();
+      showModalStrip("success", "Field updated successfully", 3000);
     }
 
     const newState = formLayoutComponents.slice();
@@ -232,7 +232,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         updateContainer({ fieldId: convertedData.id, payload: convertedData })
       ).unwrap();
 
-      window.location.reload();
+      showModalStrip("success", "Block updated successfully", 3000);
     }
 
     newState[formContainerId] = formContainer;
