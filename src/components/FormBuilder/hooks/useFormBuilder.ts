@@ -24,7 +24,7 @@ import {
   FormLayoutComponentChildrenType,
   FormLayoutComponentContainerType,
 } from "../../../types/FormTemplateTypes";
-import {
+import convertForm, {
   convertContainerToRequest,
   convertToRequest,
 } from "../../../utils/convertResponseToFormStruct";
@@ -173,32 +173,30 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     setFormLayoutComponents(newState);
 
     if (status === "saved" && !item.id) {
-      // if (selectedTemplate) {
-      //   console.log({
-      //     ...selectedTemplate,
-      //     formLayoutComponents: newState,
-      //   });
-      // }
-
       const jsonData = {
         ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
         formId: selectedTemplate?.formId,
         formName: selectedTemplate?.formName,
-        // pdf: file,
         blocks: [...convert(newState).blocks],
       };
 
-      await dispatch(publishTemplate(jsonData));
+      const response = await dispatch(publishTemplate(jsonData)).unwrap();
 
-      setSelectedTemplate((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          formLayoutComponents: newState,
-        };
-      });
+      // Convert server response to internal format and update state with server IDs
+      if (response) {
+        const convertedData = convertForm(response);
+        setFormLayoutComponents(convertedData.formLayoutComponents);
+        setSelectedTemplate((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            id: convertedData.id,
+            formLayoutComponents: convertedData.formLayoutComponents,
+          };
+        });
+      }
 
-      window.location.reload();
+      showModalStrip("success", "Form saved successfully", 3000);
     }
   };
 
@@ -240,32 +238,30 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     setFormLayoutComponents(newState);
 
     if (status === "saved" && !item.id) {
-      // if (selectedTemplate) {
-      //   console.log({
-      //     ...selectedTemplate,
-      //     formLayoutComponents: newState,
-      //   });
-      // }
-
       const jsonData = {
         ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
         formId: selectedTemplate?.formId,
         formName: selectedTemplate?.formName,
-        // pdf: file,
         blocks: [...convert(newState).blocks],
       };
 
-      await dispatch(publishTemplate(jsonData));
+      const response = await dispatch(publishTemplate(jsonData)).unwrap();
 
-      setSelectedTemplate((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          formLayoutComponents: newState,
-        };
-      });
+      // Convert server response to internal format and update state with server IDs
+      if (response) {
+        const convertedData = convertForm(response);
+        setFormLayoutComponents(convertedData.formLayoutComponents);
+        setSelectedTemplate((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            id: convertedData.id,
+            formLayoutComponents: convertedData.formLayoutComponents,
+          };
+        });
+      }
 
-      window.location.reload();
+      showModalStrip("success", "Form saved successfully", 3000);
     }
   };
 
