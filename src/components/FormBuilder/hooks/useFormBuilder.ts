@@ -136,6 +136,43 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       | undefined
   ) => setSelectedControl(item);
 
+  // Update control properties locally without API call
+  const updateControlLocally = (item: FormLayoutComponentChildrenType) => {
+    const newState = formLayoutComponents.slice();
+    const formContainerId = newState.findIndex(
+      (comp) => comp.container.internalId === item.containerId
+    );
+    if (formContainerId === -1) return;
+
+    const formContainer = { ...newState[formContainerId] };
+    formContainer.children = formContainer.children.map((child) =>
+      child.internalId === item.internalId ? item : child
+    );
+    newState[formContainerId] = formContainer;
+    setFormLayoutComponents(newState);
+  };
+
+  // Update container properties locally without API call
+  const updateContainerLocally = (item: FormLayoutComponentContainerType) => {
+    const newState = formLayoutComponents.slice();
+    const formContainerId = newState.findIndex(
+      (comp) => comp.container.internalId === item.internalId
+    );
+    if (formContainerId === -1) return;
+
+    const formContainer = { ...newState[formContainerId] };
+    formContainer.container = {
+      ...formContainer.container,
+      heading: item.heading,
+      subHeading: item.subHeading,
+      skipAble: item.skipAble,
+      type: item.type,
+      sequence: Number(item.sequence),
+    };
+    newState[formContainerId] = formContainer;
+    setFormLayoutComponents(newState);
+  };
+
   const editControlProperties = async (
     status: string,
     item: FormLayoutComponentChildrenType
@@ -509,6 +546,8 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     selectControl,
     editContainerProperties,
     editControlProperties,
+    updateControlLocally,
+    updateContainerLocally,
     moveControlFromSide,
     moveControl,
     saveForm,

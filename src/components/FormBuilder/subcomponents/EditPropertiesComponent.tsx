@@ -3,6 +3,7 @@ import React, {
   PropsWithChildren,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import _, { toUpper } from "lodash";
@@ -57,6 +58,8 @@ interface EditPropertiesComponentProps {
     selectedControl: FormLayoutComponentChildrenType,
     moveControlObj: FormLayoutComponentChildrenType
   ) => void;
+  updateControlLocally: (item: FormLayoutComponentChildrenType) => void;
+  updateContainerLocally: (item: FormLayoutComponentContainerType) => void;
   populateSignatureFields: (containerInternalId: string) => void;
   clearContainerFields: (containerInternalId: string) => void;
   status: string;
@@ -83,6 +86,8 @@ const EditPropertiesComponent: FC<
     editControlProperties,
     editContainerProperties,
     formLayoutComponents,
+    updateControlLocally,
+    updateContainerLocally,
     populateSignatureFields,
     clearContainerFields,
     status,
@@ -98,6 +103,10 @@ const EditPropertiesComponent: FC<
   const containerUpdatedItem = updatedItem as FormLayoutComponentContainerType;
 
   const [isUpdatedItemRequired, setIsUpdatedItemRequired] = useState(false);
+
+  // Track if this is the initial load to avoid syncing on first render
+  const isInitialMount = useRef(true);
+  const previousSelectedControlId = useRef<string | undefined>(undefined);
 
   const [moveControlObj, setMoveControlObj] =
     useState<FormLayoutComponentChildrenType | null>(null);
@@ -158,7 +167,33 @@ const EditPropertiesComponent: FC<
     }
     setMoveControlObj(null);
     setControlsInContainer(undefined);
+
+    // Track when selectedControl changes to reset initial mount flag
+    const currentId = (selectedControl as any)?.internalId;
+    if (previousSelectedControlId.current !== currentId) {
+      isInitialMount.current = true;
+      previousSelectedControlId.current = currentId;
+    }
   }, [selectedControl]);
+
+  // Sync changes to parent state whenever updatedItem changes
+  useEffect(() => {
+    // Skip the initial mount to avoid syncing when first loading
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Only sync if we have a valid item
+    if (!updatedItem || Object.keys(updatedItem).length === 0) return;
+
+    const itemType = (updatedItem as any).itemType;
+    if (itemType === "container") {
+      updateContainerLocally(updatedItem as FormLayoutComponentContainerType);
+    } else if (itemType === "control") {
+      updateControlLocally(updatedItem as FormLayoutComponentChildrenType);
+    }
+  }, [updatedItem, updateControlLocally, updateContainerLocally]);
 
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
