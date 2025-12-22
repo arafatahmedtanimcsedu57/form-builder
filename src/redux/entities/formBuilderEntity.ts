@@ -242,9 +242,6 @@ export const saveTemplate = createAsyncThunk(
 export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
   "fromBuilderEntity/publishTemplate",
   async (template, { dispatch, rejectWithValue }) => {
-    console.log("I am saving..............");
-    dispatch(openCircularProgress());
-
     const isUpdate = Boolean(template?.id);
     const url = isUpdate
       ? `${apis.BASE}/api/formStructure/${template!.formId}`
@@ -262,11 +259,8 @@ export const publishTemplate = createAsyncThunk<any, Partial<Form>>(
         dispatch(deleteTemplate(String(template.formId)));
       }
 
-      dispatch(closeCircularProgress());
       return data;
     } catch (err) {
-      dispatch(closeCircularProgress());
-
       const e = err as AxiosError<any>;
       const message =
         e?.response?.data?.message ??
@@ -283,18 +277,15 @@ export const updateField = createAsyncThunk<
   { fieldId: string; payload: unknown }
 >(
   "formBuilderEntity/updateField",
-  async ({ fieldId, payload }, { dispatch, rejectWithValue }) => {
-    dispatch(openCircularProgress());
+  async ({ fieldId, payload }, { rejectWithValue }) => {
     try {
       const { data } = await SecurePut<any>({
         url: `${apis.BASE}/api/field/${fieldId}`,
         data: payload,
       });
 
-      dispatch(closeCircularProgress());
       return { fieldId, response: data ?? null };
     } catch (error: any) {
-      dispatch(closeCircularProgress());
       const msg =
         error?.response?.data?.message ??
         error?.message ??
@@ -309,18 +300,15 @@ export const updateContainer = createAsyncThunk<
   { fieldId: string; payload: unknown }
 >(
   "formBuilderEntity/updateField",
-  async ({ fieldId, payload }, { dispatch, rejectWithValue }) => {
-    dispatch(openCircularProgress());
+  async ({ fieldId, payload }, { rejectWithValue }) => {
     try {
       const { data } = await SecurePut<any>({
         url: `${apis.BASE}/api/block/${fieldId}`,
         data: payload,
       });
 
-      dispatch(closeCircularProgress());
       return { fieldId, response: data ?? null };
     } catch (error: any) {
-      dispatch(closeCircularProgress());
       const msg =
         error?.response?.data?.message ??
         error?.message ??

@@ -22,9 +22,7 @@ interface FileUploadType {
 export const saveFormFile = createAsyncThunk<FileType, FormData>(
   "formFile/saveFile",
 
-  async (file: FormData, { rejectWithValue, dispatch }) => {
-    dispatch(openCircularProgress());
-
+  async (file: FormData, { rejectWithValue }) => {
     try {
       const { data } = await SecurePost<{ data: FileType }>({
         url: `${apis.BASE}/api/v1/multimedia/upload`,
@@ -34,11 +32,8 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
         },
       });
 
-      dispatch(closeCircularProgress());
       return data?.data || ({} as FileType);
     } catch (error: any) {
-      dispatch(closeCircularProgress());
-
       if (error.response && error.response.data.message)
         return rejectWithValue(error.response.data.message);
       else return rejectWithValue(error.message);
@@ -49,30 +44,16 @@ export const saveFormFile = createAsyncThunk<FileType, FormData>(
 export const setFormFile = createAsyncThunk<FileType | null, FileType | null>(
   "formFile/setFile",
 
-  async (file, { dispatch }) => {
-    dispatch(openCircularProgress());
-
-    return await new Promise<FileType | null>((resolve) => {
-      setTimeout(() => {
-        dispatch(closeCircularProgress());
-        resolve(file);
-      }, 1000);
-    });
+  async (file) => {
+    return file;
   }
 );
 
 export const resetFormFile = createAsyncThunk<FileType, FileType>(
   "formFile/resetFile",
 
-  async (file, { dispatch }) => {
-    dispatch(openCircularProgress());
-
-    return await new Promise<FileType>((resolve) => {
-      setTimeout(() => {
-        dispatch(closeCircularProgress());
-        resolve(file);
-      }, 1000);
-    });
+  async (file) => {
+    return file;
   }
 );
 
