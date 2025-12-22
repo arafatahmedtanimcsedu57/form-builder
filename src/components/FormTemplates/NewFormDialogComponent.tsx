@@ -118,14 +118,12 @@ const NewFormDialogComponent: FunctionComponent<
     data.append("file", currentFile);
     dispatch(saveFormFile(data))
       .then((result) => {
-        console.log("saveFormFile success:", result);
+        // console.log("saveFormFile success:", result);
       })
       .catch((error) => {
-        console.error("saveFormFile error:", error);
+        // console.error("saveFormFile error:", error);
       });
   };
-
-  console.log("file in dialog:", file, fileLoading);
 
   useEffect(() => {
     if (!authToken) dispatch(getToken("GET AUTH TOKEN"));

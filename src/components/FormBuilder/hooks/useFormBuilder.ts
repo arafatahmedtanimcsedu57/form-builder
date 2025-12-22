@@ -536,8 +536,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
     if (!checkIfControlsInContainer()) return;
 
-    console.log(selectedTemplate, formLayoutComponents);
-
     const currentTemplate = JSON.parse(JSON.stringify(selectedTemplate));
 
     currentTemplate.formLayoutComponents = formLayoutComponents;
@@ -624,9 +622,9 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         });
       }
 
-      showModalStrip("success", "Form published successfully", 3000);
+      showModalStrip("success", "Form saved successfully", 3000);
     } catch (error) {
-      showModalStrip("danger", "Failed to publish form", 5000);
+      showModalStrip("danger", "Failed to save form", 5000);
     }
   };
 

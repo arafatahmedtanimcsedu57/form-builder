@@ -50,7 +50,7 @@ const LeftSidebar: FunctionComponent<LeftSidebarProps> = ({
     data.append("file", currentFile.file);
     dispatch(saveFormFile(data))
       .then((result) => {
-        console.log("saveFormFile success:", result);
+        // console.log("saveFormFile success:", result);
         forceUpdate();
       })
       .catch((error) => {

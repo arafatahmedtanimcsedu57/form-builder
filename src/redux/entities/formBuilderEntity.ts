@@ -130,7 +130,6 @@ export const getSingleTemplate = createAsyncThunk<
         dispatch(closeCircularProgress());
 
         const _data: TemplateType = convertForm(data);
-        console.log(_data, ">>>>>>>>>>>>>>>>>>>>>>>");
         return _data;
       } catch (error: any) {
         dispatch(closeCircularProgress());

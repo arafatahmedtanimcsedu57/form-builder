@@ -69,7 +69,7 @@ export const SecureGet = async <T>(
       params: { ...p.params },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 };
@@ -88,7 +88,7 @@ export const SecurePost = async <T>(
       params: { ...p.params },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     throw error;
   }
@@ -108,7 +108,7 @@ export const SecurePut = async <T>(
       params: { ...p.params },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     throw error;
   }
@@ -129,7 +129,7 @@ export const SecureUpload = async <T>(
       params: { ...p.params },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     throw error;
   }
@@ -149,7 +149,7 @@ export const SecureDelete = async <T>(
       params: { ...p.params },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     throw error;
   }

@@ -52,61 +52,59 @@ function convertForm(input: Form) {
     creator: "Test User",
     formLayoutComponents: [...(input.blocks || [])]
       .sort(
-        (blockA, blockB) =>
-          (blockA?.sequence ?? 0) - (blockB?.sequence ?? 0),
+        (blockA, blockB) => (blockA?.sequence ?? 0) - (blockB?.sequence ?? 0)
       )
       .map((block) => ({
-      container: {
-        id: block.id, //change
-        internalId: block.id,
-        controlName: "step-container",
-        displayText: "Block",
-        itemType: "container",
-        icon: "fa fa-building",
-        heading: block.title,
-        subHeading: "",
-        sequence: block.sequence,
-        skipAble: block.skipAble,
-        type: block.type,
-      },
-      children: [...(block.fields || [])]
-        .sort(
-          (fieldA, fieldB) =>
-            (fieldA?.sequence ?? 0) - (fieldB?.sequence ?? 0),
-        )
-        .map((field) => ({
-        id: field.id, //change
-        internalId: field.id,
-        controlName: convertControlName(field.type),
-        displayText: field.label,
-        description: field.information || "",
-        placeholder: field.placeholder || "",
-        labelName: field.label,
-        itemType: "control",
-        icon: getIconForControl(field.type),
-        required: field.required,
-        category: getCategoryForControl(field.type),
-        containerId: block.id,
-        name: field.name,
-        sequence: field.sequence,
-        ...(field.options
-          ? {
-              items: field.options.map((option) => ({
-                id: option.id, //change
-                value: option.value,
-                label: option.label,
-              })),
-            }
-          : {}),
+        container: {
+          id: block.id, //change
+          internalId: block.id,
+          controlName: "step-container",
+          displayText: "Block",
+          itemType: "container",
+          icon: "fa fa-building",
+          heading: block.title,
+          subHeading: "",
+          sequence: block.sequence,
+          skipAble: block.skipAble,
+          type: block.type,
+        },
+        children: [...(block.fields || [])]
+          .sort(
+            (fieldA, fieldB) =>
+              (fieldA?.sequence ?? 0) - (fieldB?.sequence ?? 0)
+          )
+          .map((field) => ({
+            id: field.id, //change
+            internalId: field.id,
+            controlName: convertControlName(field.type),
+            displayText: field.label,
+            description: field.information || "",
+            placeholder: field.placeholder || "",
+            labelName: field.label,
+            itemType: "control",
+            icon: getIconForControl(field.type),
+            required: field.required,
+            category: getCategoryForControl(field.type),
+            containerId: block.id,
+            name: field.name,
+            sequence: field.sequence,
+            ...(field.options
+              ? {
+                  items: field.options.map((option) => ({
+                    id: option.id, //change
+                    value: option.value,
+                    label: option.label,
+                  })),
+                }
+              : {}),
+          })),
       })),
-    })),
     lastPublishedAt: currentDateTime(input.modificationDate),
     publishHistory: [],
     publishStatus: "saved",
     updatedAt: currentDateTime(input.modificationDate),
   };
 
-  console.log(input, converted, "ARAAFATAAAAAAAAAAAAAAAAAAAAAaa");
   return converted;
 }
 
