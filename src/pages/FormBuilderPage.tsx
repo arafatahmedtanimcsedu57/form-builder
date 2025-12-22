@@ -82,6 +82,7 @@ const FormBuilderPage: React.FC<
           status={_status}
           fileLoading={fileLoading}
           templateLoading={templateLoading}
+          // templateLoading={false}
         />
       ) : (
         <></>

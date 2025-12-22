@@ -586,6 +586,50 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       });
   };
 
+  const publishForm = async (file: any) => {
+    if (formLayoutComponents.length === 0) {
+      showModalStrip("danger", "Form cannot be empty", 5000);
+      return;
+    }
+
+    if (!checkIfControlsInContainer()) return;
+
+    // Use currentFormName if set, otherwise fall back to selectedTemplate's formName
+    const formName =
+      currentFormName || selectedTemplate?.formName || template.formName;
+
+    const jsonData = {
+      ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
+      formId: selectedTemplate?.formId,
+      formName: formName,
+      pdf: file,
+      blocks: [...convert(formLayoutComponents).blocks],
+    };
+
+    try {
+      const response = await dispatch(publishTemplate(jsonData)).unwrap();
+
+      // Convert server response to internal format and update state with server IDs
+      if (response) {
+        const convertedData = convertForm(response);
+        setFormLayoutComponents(convertedData.formLayoutComponents);
+        setSelectedTemplate((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            id: convertedData.id,
+            formName: formName,
+            formLayoutComponents: convertedData.formLayoutComponents,
+          };
+        });
+      }
+
+      showModalStrip("success", "Form published successfully", 3000);
+    } catch (error) {
+      showModalStrip("danger", "Failed to publish form", 5000);
+    }
+  };
+
   return {
     handleItemAdded,
     deleteContainer,
@@ -601,6 +645,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     // updateForm,
     setCurrentFormName,
     saveFormName,
+    publishForm,
     populateSignatureFields,
     clearContainerFields,
     selectedTemplate,

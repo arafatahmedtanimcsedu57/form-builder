@@ -68,6 +68,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     selectControl,
     saveFormName,
     setCurrentFormName,
+    publishForm,
     populateSignatureFields,
     clearContainerFields,
     selectedTemplate,
@@ -184,8 +185,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
 
                       <div>
                         <SaveConfirmation
-                          template={template}
-                          formLayoutComponents={formLayoutComponents}
+                          publishForm={publishForm}
                           file={file}
                         />
                       </div>
