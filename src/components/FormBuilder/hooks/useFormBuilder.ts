@@ -97,12 +97,12 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
   const deleteContainer = (containerId: string) => {
     if (confirm("Are you sure you want to delete container?")) {
       const newState = formLayoutComponents.filter(
-        (comp) => comp.container.id !== containerId
+        (comp) => comp.container.internalId !== containerId
       );
       setFormLayoutComponents(newState);
       setSelectedControl((prev) =>
         prev &&
-        (prev.id === containerId ||
+        (prev.internalId === containerId ||
           (prev as FormLayoutComponentChildrenType).containerId === containerId)
           ? undefined
           : prev
@@ -112,11 +112,11 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
   const deleteControl = (controlId: string, containerId: string) => {
     const newState = formLayoutComponents.map((component) => {
-      if (component.container.id === containerId) {
+      if (component.container.internalId === containerId) {
         return {
           ...component,
           children: component.children.filter(
-            (child) => child.id !== controlId
+            (child) => child.internalId !== controlId
           ),
         };
       }
@@ -125,7 +125,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
 
     setFormLayoutComponents(newState);
     setSelectedControl((prev) =>
-      prev && prev.id === controlId ? undefined : prev
+      prev && prev.internalId === controlId ? undefined : prev
     );
   };
 
@@ -459,14 +459,14 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
     );
 
     const currentItemContainer = componentsCopy.filter(
-      (con) => con.container.id === item.containerId
+      (con) => con.container.internalId === item.containerId
     )[0];
     const moveItemToContainer = componentsCopy.filter(
-      (con, ind) => con.container.id === containerId
+      (con) => con.container.internalId === containerId
     )[0];
 
     const itemIndex = currentItemContainer.children.findIndex(
-      (child) => child.id === item.id
+      (child) => child.internalId === item.internalId
     );
     const deletedItem = currentItemContainer.children.splice(itemIndex, 1);
     deletedItem[0].containerId = containerId;
@@ -496,13 +496,13 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
       JSON.stringify(formLayoutComponents)
     );
 
-    if (dragIndex !== undefined && item.id) {
+    if (dragIndex !== undefined && item.internalId) {
       if (item.containerId === containerId) {
         const formContainer = componentsCopy.filter(
-          (con) => con.container.id === containerId
+          (con) => con.container.internalId === containerId
         )[0];
         const deletedItem = formContainer.children.splice(
-          formContainer.children.findIndex((con) => con.id === item.id),
+          formContainer.children.findIndex((con) => con.internalId === item.internalId),
           1
         );
         if (deletedItem.length === 0) return;
