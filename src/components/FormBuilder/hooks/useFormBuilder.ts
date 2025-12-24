@@ -32,9 +32,10 @@ import { convert } from "../../../utils/convert";
 
 interface useFormBuilderProps {
   template: TemplateType;
+  file: any;
 }
 
-const useFormBuilder = ({ template }: useFormBuilderProps) => {
+const useFormBuilder = ({ template, file }: useFormBuilderProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<null | TemplateType>(
     template
   );
@@ -214,6 +215,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
         formId: selectedTemplate?.formId,
         formName: selectedTemplate?.formName,
+        pdf: file,
         blocks: [...convert(newState).blocks],
       };
 
@@ -279,6 +281,7 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
         ...(selectedTemplate?.id ? { id: selectedTemplate?.id } : {}),
         formId: selectedTemplate?.formId,
         formName: selectedTemplate?.formName,
+        pdf: file,
         blocks: [...convert(newState).blocks],
       };
 
@@ -585,13 +588,6 @@ const useFormBuilder = ({ template }: useFormBuilderProps) => {
   };
 
   const publishForm = async (file: any) => {
-    if (formLayoutComponents.length === 0) {
-      showModalStrip("danger", "Form cannot be empty", 5000);
-      return;
-    }
-
-    if (!checkIfControlsInContainer()) return;
-
     // Use currentFormName if set, otherwise fall back to selectedTemplate's formName
     const formName =
       currentFormName || selectedTemplate?.formName || template.formName;

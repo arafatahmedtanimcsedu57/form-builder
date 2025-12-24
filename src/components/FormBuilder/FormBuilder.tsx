@@ -75,7 +75,7 @@ const FormBuilder: React.FC<PropsWithChildren<FormBuilderProps>> = ({
     formLayoutComponents,
     selectedControl,
     currentFormName,
-  } = useFormBuilder({ template });
+  } = useFormBuilder({ template, file });
 
   const navigate = useNavigate();
   const [showSaveConfirmation, setShowSaveConfirmation] =
