@@ -114,6 +114,8 @@ const EditPropertiesComponent: FC<
     number | undefined
   >(undefined);
 
+  console.log("EditPropertiesComponent rendered", file, ">>>>>>>>");
+
   // NEW: state for upload name building
   const [imageKey, setImageKey] = useState<string>("");
   const [nameSuffix, setNameSuffix] = useState<string>("");
@@ -393,9 +395,13 @@ const EditPropertiesComponent: FC<
                           handleChange(e);
                           if (containerUpdatedItem.internalId) {
                             if (e.target.value === "SIGNATURE") {
-                              populateSignatureFields(containerUpdatedItem.internalId);
+                              populateSignatureFields(
+                                containerUpdatedItem.internalId
+                              );
                             } else if (e.target.value === "INPUT") {
-                              clearContainerFields(containerUpdatedItem.internalId);
+                              clearContainerFields(
+                                containerUpdatedItem.internalId
+                              );
                             }
                           }
                         }}
