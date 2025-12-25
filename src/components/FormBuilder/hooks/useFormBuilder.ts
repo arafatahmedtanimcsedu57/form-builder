@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import moment from "moment";
 
 import { useAppDispatch } from "../../../redux/hooks";
@@ -138,41 +138,51 @@ const useFormBuilder = ({ template, file }: useFormBuilderProps) => {
   ) => setSelectedControl(item);
 
   // Update control properties locally without API call
-  const updateControlLocally = (item: FormLayoutComponentChildrenType) => {
-    const newState = formLayoutComponents.slice();
-    const formContainerId = newState.findIndex(
-      (comp) => comp.container.internalId === item.containerId
-    );
-    if (formContainerId === -1) return;
+  const updateControlLocally = useCallback(
+    (item: FormLayoutComponentChildrenType) => {
+      setFormLayoutComponents((prevState) => {
+        const newState = prevState.slice();
+        const formContainerId = newState.findIndex(
+          (comp) => comp.container.internalId === item.containerId
+        );
+        if (formContainerId === -1) return prevState;
 
-    const formContainer = { ...newState[formContainerId] };
-    formContainer.children = formContainer.children.map((child) =>
-      child.internalId === item.internalId ? item : child
-    );
-    newState[formContainerId] = formContainer;
-    setFormLayoutComponents(newState);
-  };
+        const formContainer = { ...newState[formContainerId] };
+        formContainer.children = formContainer.children.map((child) =>
+          child.internalId === item.internalId ? item : child
+        );
+        newState[formContainerId] = formContainer;
+        return newState;
+      });
+    },
+    []
+  );
 
   // Update container properties locally without API call
-  const updateContainerLocally = (item: FormLayoutComponentContainerType) => {
-    const newState = formLayoutComponents.slice();
-    const formContainerId = newState.findIndex(
-      (comp) => comp.container.internalId === item.internalId
-    );
-    if (formContainerId === -1) return;
+  const updateContainerLocally = useCallback(
+    (item: FormLayoutComponentContainerType) => {
+      setFormLayoutComponents((prevState) => {
+        const newState = prevState.slice();
+        const formContainerId = newState.findIndex(
+          (comp) => comp.container.internalId === item.internalId
+        );
+        if (formContainerId === -1) return prevState;
 
-    const formContainer = { ...newState[formContainerId] };
-    formContainer.container = {
-      ...formContainer.container,
-      heading: item.heading,
-      subHeading: item.subHeading,
-      skipAble: item.skipAble,
-      type: item.type,
-      sequence: Number(item.sequence),
-    };
-    newState[formContainerId] = formContainer;
-    setFormLayoutComponents(newState);
-  };
+        const formContainer = { ...newState[formContainerId] };
+        formContainer.container = {
+          ...formContainer.container,
+          heading: item.heading,
+          subHeading: item.subHeading,
+          skipAble: item.skipAble,
+          type: item.type,
+          sequence: Number(item.sequence),
+        };
+        newState[formContainerId] = formContainer;
+        return newState;
+      });
+    },
+    []
+  );
 
   const editControlProperties = async (
     status: string,
