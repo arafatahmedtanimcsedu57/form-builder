@@ -114,7 +114,7 @@ const EditPropertiesComponent: FC<
     number | undefined
   >(undefined);
 
-  console.log("EditPropertiesComponent rendered", file, ">>>>>>>>");
+  // console.log("EditPropertiesComponent rendered", file, ">>>>>>>>");
 
   // NEW: state for upload name building
   const [imageKey, setImageKey] = useState<string>("");
@@ -347,7 +347,7 @@ const EditPropertiesComponent: FC<
                     <TextField
                       id="field-Sequence"
                       key="field-Sequence"
-                      label="Field Sequence"
+                      label="Block Sequence"
                       name="sequence"
                       value={containerUpdatedItem.sequence}
                       onChange={handleChange}
